@@ -1,12 +1,12 @@
+////
+////  NetworkRunner.swift
+////  dodum-iOS
+////
+////  Created by maple on 9/27/25.
+////
 //
-//  NetworkRunner.swift
-//  dodum-iOS
+//import SwiftUI
 //
-//  Created by maple on 9/27/25.
-//
-
-import SwiftUI
-
-class NetworkRunner: ObservableObject {
-    
-}
+//class NetworkRunner: ObservableObject {
+//    
+//}

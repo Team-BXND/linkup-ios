@@ -10,9 +10,22 @@
 		9A3EA2582F03EE92001E6AB6 /* LinkUP-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LinkUP-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		F5D13D1E2F15EADD00CB8B1D /* Exceptions for "LinkUP-iOS" folder in "LinkUP-iOS" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Resource/Info.plist,
+			);
+			target = 9A3EA2572F03EE92001E6AB6 /* LinkUP-iOS */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		9A3EA25A2F03EE92001E6AB6 /* LinkUP-iOS */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				F5D13D1E2F15EADD00CB8B1D /* Exceptions for "LinkUP-iOS" folder in "LinkUP-iOS" target */,
+			);
 			path = "LinkUP-iOS";
 			sourceTree = "<group>";
 		};

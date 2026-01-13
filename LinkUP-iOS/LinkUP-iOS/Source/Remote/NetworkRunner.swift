@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import Combine
+
 
 class NetworkRunner: ObservableObject {
     

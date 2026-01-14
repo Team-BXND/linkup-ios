@@ -14,6 +14,7 @@ struct MainView: View {
                 .imageScale(.large)
                 .foregroundStyle(.tint)
             Text("Hello, world!")
+                .font(.bold(20))
         }
         .padding()
     }

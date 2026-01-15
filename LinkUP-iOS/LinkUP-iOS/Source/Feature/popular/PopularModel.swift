@@ -16,5 +16,5 @@ struct PopularModel: Identifiable {
     let preview: String
     let isAccepted: Bool
     let commentCount: Int
-    let createdAt: String
+    let createdAt: Date
 }

@@ -12,25 +12,25 @@ struct PopularQuestionCardView: View {
     var body: some View {
         HStack(alignment: .center, spacing: 20) {
             Text("\(popular.id)")
-                .font(.custom("Pretendard-SemiBold", size: 16))
+                .font(.semibold(16))
                 .foregroundColor(.blue)
 
             VStack(alignment: .leading, spacing: 8) {
                 Text(popular.title)
-                    .font(.custom("Pretendard-SemiBold", size: 16))
+                    .font(.semibold(16))
                     .foregroundColor(.black)
 
                 HStack(spacing: 4) {
                     Text(popular.category.rawValue)
-                        .font(.custom("Pretendard-Regular", size: 12))
+                        .font(.regular(12))
                         .foregroundColor(.gray)
                     
                     Text("\(popular.author) 님")
-                        .font(.custom("Pretendard-Regular", size: 12))
+                        .font(.regular(12))
                         .foregroundColor(.gray)
                     
                     Text("유용해요 \(popular.like)")
-                        .font(.custom("Pretendard-Regular", size: 12))
+                        .font(.regular(12))
                         .foregroundColor(.gray)
                 }
             }

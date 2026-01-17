@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PopularView: View {
-    @StateObject private var viewModel = PopularQuestionViewModel()
+    @StateObject private var viewModel = PopularViewModel()
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {

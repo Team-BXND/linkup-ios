@@ -20,7 +20,7 @@ struct RankingTopView: View {
     }
 
     private var highlightColor: Color {
-        isFirst ? .blue : .primary
+        isFirst ? .main : .primary
     }
     
     var body: some View {

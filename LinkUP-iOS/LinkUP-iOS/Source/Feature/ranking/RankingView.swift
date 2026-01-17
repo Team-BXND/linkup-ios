@@ -33,7 +33,9 @@ struct RankingView: View {
                 .shadow(color: Color.black.opacity(0.06), radius: 1, x: 0, y: 4)
 
                 VStack(alignment: .leading, spacing: 24) {
-                    ForEach(viewModel.sortedRankings.dropFirst(3).prefix(27)) { user in
+                    let listData = viewModel.sortedRankings
+                    
+                    ForEach(Array(listData.prefix(30).dropFirst(3).enumerated()), id: \.element.id) { index, user in
                         RankingRowView(user: user)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }

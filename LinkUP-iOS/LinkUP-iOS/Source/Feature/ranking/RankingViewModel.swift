@@ -16,7 +16,12 @@ class RankingViewModel: ObservableObject {
     }
     
     var sortedRankings: [RankingModel] {
-        rankings.sorted { $0.point > $1.point }
+        rankings.sorted {
+            if $0.point == $1.point {
+                return $0.rank < $1.rank
+            }
+            return $0.point > $1.point
+        }
     }
     
     private func loadSampleData() {

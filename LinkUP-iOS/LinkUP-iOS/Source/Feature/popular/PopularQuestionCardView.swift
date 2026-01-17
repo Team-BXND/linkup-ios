@@ -13,7 +13,7 @@ struct PopularQuestionCardView: View {
         HStack(alignment: .center, spacing: 20) {
             Text("\(popular.id)")
                 .font(.semibold(16))
-                .foregroundColor(.blue)
+                .foregroundColor(Color(.main))
 
             VStack(alignment: .leading, spacing: 8) {
                 Text(popular.title)
@@ -41,7 +41,7 @@ struct PopularQuestionCardView: View {
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .stroke(
-                    popular.isAccepted ? Color.blue : Color.gray.opacity(0.3)
+                    popular.isAccepted ? Color.main : Color.gray.opacity(0.3)
                 )
         )
     }

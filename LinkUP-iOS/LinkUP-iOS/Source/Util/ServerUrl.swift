@@ -5,14 +5,6 @@
 //  Created by maple on 9/27/25.
 //
 
-import SwiftUI
+import Foundation
 
-struct ServerUrl: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
-    }
-}
-
-#Preview {
-    ServerUrl()
-}
+let baseurl: String = "http://www.ddd.com"

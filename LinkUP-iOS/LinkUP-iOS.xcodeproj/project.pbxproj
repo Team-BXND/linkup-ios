@@ -6,6 +6,11 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		F52F8A112F2317D600D83488 /* CombineMoya in Frameworks */ = {isa = PBXBuildFile; productRef = F52F8A102F2317D600D83488 /* CombineMoya */; };
+		F52F8A132F2317D600D83488 /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = F52F8A122F2317D600D83488 /* Moya */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		9A3EA2582F03EE92001E6AB6 /* LinkUP-iOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "LinkUP-iOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -36,6 +41,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F52F8A132F2317D600D83488 /* Moya in Frameworks */,
+				F52F8A112F2317D600D83488 /* CombineMoya in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +85,8 @@
 			);
 			name = "LinkUP-iOS";
 			packageProductDependencies = (
+				F52F8A102F2317D600D83488 /* CombineMoya */,
+				F52F8A122F2317D600D83488 /* Moya */,
 			);
 			productName = "LinkUP-iOS";
 			productReference = 9A3EA2582F03EE92001E6AB6 /* LinkUP-iOS.app */;
@@ -107,6 +116,9 @@
 			);
 			mainGroup = 9A3EA24F2F03EE92001E6AB6;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				F52F8A0F2F2317D600D83488 /* XCRemoteSwiftPackageReference "Moya" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 9A3EA2592F03EE92001E6AB6 /* Products */;
 			projectDirPath = "";
@@ -366,6 +378,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		F52F8A0F2F2317D600D83488 /* XCRemoteSwiftPackageReference "Moya" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Moya/Moya";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 15.0.3;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		F52F8A102F2317D600D83488 /* CombineMoya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F52F8A0F2F2317D600D83488 /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = CombineMoya;
+		};
+		F52F8A122F2317D600D83488 /* Moya */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = F52F8A0F2F2317D600D83488 /* XCRemoteSwiftPackageReference "Moya" */;
+			productName = Moya;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 9A3EA2502F03EE92001E6AB6 /* Project object */;
 }

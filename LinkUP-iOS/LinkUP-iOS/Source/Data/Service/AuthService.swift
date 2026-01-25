@@ -6,3 +6,8 @@
 //
 
 import Foundation
+import Moya
+
+struct AuthService {
+    var provider = MoyaProvider<AuthAPI>()
+}

@@ -10,15 +10,15 @@ import Foundation
 internal import Alamofire
 
 enum AuthAPI {
-    case signup(_ a: String)
-    case signin(a: String)
-    case codesend(a: String)
-    case verify(a: String)
-    case change
-    case refresh
+    case signup(userInfo: AuthRequest)
+    case signin(loginInfo: AuthRequest)
+    case codesend(email: String)
+    case verify(verifyInfo: AuthRequest)
+    case change(change: AuthRequest)
+    case refresh(refresh: String)
 }
 
-let requesEncoder = JSONEncoding.default
+let requestEncoder = JSONEncoding.default
 
 extension AuthAPI: TargetType {
     
@@ -28,19 +28,12 @@ extension AuthAPI: TargetType {
     
     var path: String {
         switch self {
-            
-        case .signup:
-            return "auth/signup"
-        case .signin:
-            return "auth/signin"
-        case .codesend:
-            return "auth/pwchange/send"
-        case .verify:
-            return "auth/pwchange/verify"
-        case .change:
-            return "auth/pwchange/change"
-        case .refresh:
-            return "auth/refresh"
+        case .signup: "auth/signup"
+        case .signin: "auth/signin"
+        case .codesend: "auth/pwchange/send"
+        case .verify: "auth/pwchange/verify"
+        case .change: "auth/pwchange/change"
+        case .refresh: "auth/refresh"
         }
     }
     
@@ -50,26 +43,22 @@ extension AuthAPI: TargetType {
     
     var task: Moya.Task {
         switch self {
-        case .signup(let a):
-            return .requestParameters(parameters: <#T##[String : Any]#>, encoding: requesEncoder)
-        case .signin(let a):
-            <#code#>
-        case .codesend(let a):
-            <#code#>
-        case .verify(let a):
-            <#code#>
-        case .change:
-            <#code#>
-        case .refresh:
-            <#code#>
+        case .signup(userInfo: let Info): .requestJSONEncodable(Info)
+            
+        case .signin(loginInfo: let Info): .requestJSONEncodable(Info)
+            
+        case .codesend(email: let email): .requestParameters(parameters: ["email": email], encoding: requestEncoder)
+            
+        case .verify(verifyInfo: let Info): .requestJSONEncodable(Info)
+            
+        case .change(change: let change): .requestJSONEncodable(change)
+            
+        case .refresh(refresh: let refresh): .requestParameters(parameters: ["refresh": refresh], encoding: requestEncoder)
         }
     }
     
     var headers: [String : String]? {
-        switch self {
-        default:
-            return [:]
-        }
+        return ["Content-Type": "application/json"]
     }
     
     

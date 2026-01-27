@@ -1,17 +1,14 @@
 //
-//  LoginView.swift
+//  ChangePWView.swift
 //  LinkUP-iOS
 //
-//  Created by chanwoo on 12/30/25.
+//  Created by chanwoo on 1/11/26.
 //
 
 import SwiftUI
 
-struct SignupView: View {
+struct EmailView: View {
     @State private var email = ""
-    @State private var nickname = ""
-    @State private var password = ""
-    @State private var confirmPassword = ""
     
     var body: some View {
         VStack(spacing: 0) {
@@ -19,7 +16,7 @@ struct SignupView: View {
             
             Image("Logo2")
             
-            Text("회원가입")
+            Text("비밀번호 찾기")
                 .font(.system(size: 40, weight: .semibold))
                 .padding(.top, 4)
                 .padding(.bottom, 64)
@@ -30,31 +27,13 @@ struct SignupView: View {
                     .padding(.horizontal, 16)
                     .background(Color(.systemGray6))
                     .cornerRadius(14)
-                
-                TextField("닉네임을 입력하세요.", text: $nickname)
-                    .frame(height: 40)
-                    .padding(.horizontal, 16)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(14)
-                
-                SecureField("비밀번호를 입력하세요.", text: $password)
-                    .frame(height: 40)
-                    .padding(.horizontal, 16)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(14)
-                
-                SecureField("비밀번호를 다시 입력하세요.", text: $confirmPassword)
-                    .frame(height: 40)
-                    .padding(.horizontal, 16)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(14)
             }
             .padding(.horizontal, 32)
             .padding(.bottom, 32)
             
             
             VStack(spacing: 16) {
-                Button("회원가입") { }
+                Button("인증번호 발송") { }
                     .font(.system(size: 20, weight: .medium))
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity, minHeight: 40)
@@ -74,5 +53,5 @@ struct SignupView: View {
 }
 
 #Preview {
-    SignupView()
+    EmailView()
 }

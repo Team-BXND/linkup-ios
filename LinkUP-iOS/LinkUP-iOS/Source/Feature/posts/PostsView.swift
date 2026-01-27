@@ -18,7 +18,7 @@ struct PostsView: View {
                     VStack(alignment: .leading, spacing: 20) {
                         // 질문 프롬프트
                         Text("💬대소고에서 궁금한 점이 있다면?")
-                            .font(.system(size: 18, weight: .semibold))
+                            .font(.semibold(18))
                             .foregroundColor(.primary)
                             .padding(.leading, 32)
                         
@@ -53,7 +53,7 @@ struct PostsView: View {
                                 viewModel.selectCategory(nil)
                             }) {
                                 Text("🔥가장 유용했던 글")
-                                    .font(.system(size: 16, weight: .bold))
+                                    .font(.bold(16))
                                     .padding(.horizontal, 20)
                                     .padding(.vertical, 10)
                                     .background(viewModel.selectedTab == 0 ? Color("MainColor") : Color.white)
@@ -67,7 +67,7 @@ struct PostsView: View {
                                 viewModel.selectCategory(nil)
                             }) {
                                 Text("🧐질문 목록")
-                                    .font(.system(size: 16, weight: .bold))
+                                    .font(.bold(16))
                                     .padding(.horizontal, 20)
                                     .padding(.vertical, 10)
                                     .background(viewModel.selectedTab == 1 ? Color("MainColor") : Color.white)
@@ -86,11 +86,11 @@ struct PostsView: View {
                                         viewModel.selectCategory(nil)
                                     }) {
                                         Text("전체")
-                                            .font(.system(size: 12, weight: .medium))
+                                            .font(.medium(12))
                                             .padding(.horizontal, 16)
                                             .padding(.vertical, 8)
                                             .background(viewModel.selectedCategory == nil ? Color("MainColor") : Color.gray)
-                                            .foregroundColor(viewModel.selectedCategory == nil ? .white : .white)
+                                            .foregroundColor(.white)
                                             .cornerRadius(20)
                                             .overlay(
                                                 RoundedRectangle(cornerRadius: 20)
@@ -98,16 +98,16 @@ struct PostsView: View {
                                             )
                                     }
                                     
-                                    ForEach(viewModel.categories, id: \.self) { category in
+                                    ForEach(Category.allCases) { category in
                                         Button(action: {
                                             viewModel.selectCategory(category)
                                         }) {
-                                            Text(category)
-                                                .font(.system(size: 12, weight: .medium))
+                                            Text(category.rawValue)
+                                                .font(.medium(12))
                                                 .padding(.horizontal, 16)
                                                 .padding(.vertical, 8)
                                                 .background(viewModel.selectedCategory == category ? Color("MainColor") : Color.gray)
-                                                .foregroundColor(viewModel.selectedCategory == category ? .white : .white)
+                                                .foregroundColor(.white)
                                                 .cornerRadius(20)
                                                 .overlay(
                                                     RoundedRectangle(cornerRadius: 20)
@@ -129,28 +129,28 @@ struct PostsView: View {
                                 ) {
                                     HStack(alignment: .top, spacing: 16) {
                                         Text("\(post.id)")
-                                            .font(.system(size: 16, weight: .semibold))
+                                            .font(.semibold(16))
                                             .foregroundColor(Color("MainColor"))
                                             .frame(width: 30)
                                         
                                         VStack(alignment: .leading, spacing: 12) {
                                             Text(post.title)
-                                                .font(.system(size: 16, weight: .semibold))
+                                                .font(.semibold(16))
                                                 .foregroundColor(.primary)
                                             
                                             HStack(spacing: 16) {
                                                 HStack(spacing: 4) {
-                                                    Image(systemName: "message")
-                                                        .font(.system(size: 12))
-                                                    Text("유용해요 \(post.helpfulCount)")
-                                                        .font(.system(size: 12))
+                                                    Image(systemName: "hand.thumbsup")
+                                                        .font(.regular(12))
+                                                    Text("유용해요 \(post.like)")
+                                                        .font(.regular(12))
                                                 }
                                                 
                                                 HStack(spacing: 4) {
                                                     Image(systemName: "message.fill")
-                                                        .font(.system(size: 12))
-                                                    Text("답변수 \(post.answersCount)")
-                                                        .font(.system(size: 12))
+                                                        .font(.regular(12))
+                                                    Text("답변수 \(post.commentCount ?? 0)")
+                                                        .font(.regular(12))
                                                 }
                                             }
                                             .foregroundColor(.gray)
@@ -174,7 +174,7 @@ struct PostsView: View {
                 // 플로팅 버튼
                 Button(action: { showWriteView = true }) {
                     Image(systemName: "plus")
-                        .font(.system(size: 24, weight: .medium))
+                        .font(.medium(24))
                         .foregroundColor(.white)
                         .frame(width: 56, height: 56)
                         .background(Color("MainColor"))

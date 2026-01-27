@@ -11,13 +11,10 @@ class PostsViewModel: ObservableObject {
     // 메인 화면 상태
     @Published var posts: [Post] = []
     @Published var selectedTab: Int = 0
-    @Published var selectedCategory: String? = nil
+    @Published var selectedCategory: Category? = nil
     
     // 상세 화면 상태
     @Published var selectedPost: Post?
-    @Published var isHelpful: Bool = false
-    
-    let categories = ["학교생활", "코드", "프로젝트"]
     
     init() {
         loadSampleData()
@@ -31,17 +28,19 @@ class PostsViewModel: ObservableObject {
         return posts
     }
     
-    // 데이터 로드
+    // 샘플 데이터 로드
     func loadSampleData() {
         posts = [
             Post(
                 id: 1,
                 title: "React에서 무한 렌더링 오류",
-                author: "사랑하게될거야넘",
-                category: "코드",
-                date: "2026-01-01",
-                helpfulCount: 10,
-                answersCount: 8,
+                author: "사랑하게될거야",
+                category: .code,
+                like: 10,
+                createdAt: "2026-01-01",
+                isAccepted: true,
+                preview: "안녕하세요! 현재 프론트엔드 개발자를 꿈꾸며 리액트를 공부하고 있는 고등학생입니다...",
+                commentCount: 8,
                 content: """
 안녕하세요! 현재 프론트엔드 개발자를 꿈꾸며 리액트를 공부하고 있는 고등학생입니다.
 
@@ -58,11 +57,12 @@ class PostsViewModel: ObservableObject {
 JavaScript
 import React, { useState, useEffect } from 'react';
 """,
-                answers: [
-                    Answer(
-                        id: 1,
+                isLike: false,
+                isAuthor: false,
+                comments: [
+                    Comment(
+                        commentId: 1,
                         author: "Nickname",
-                        date: "2026-01-01",
                         content: """
 작성자님이 3번 항목에서 시뮬레이션하신 과정이 정확히 리액트가 동작하는 방식입니다. 고등학생이신데 라이프사이클 흐름을 아주 잘 파악하고 계시네요!
 
@@ -71,7 +71,9 @@ import React, { useState, useEffect } from 'react';
 1. 범인은 바로 [count] (의존성 배열)
 
 useEffect의 두 번째 인자인 의존성 배열(dependency array)은 "이 안에 있는 값이 변하면, useEffect를 다시 실행해!" 라는 명령입니다.
-"""
+""",
+                        isAccepted: true,
+                        createdAt: "2026-01-01"
                     )
                 ]
             ),
@@ -79,23 +81,31 @@ useEffect의 두 번째 인자인 의존성 배열(dependency array)은 "이 안
                 id: 2,
                 title: "포트폴리오 준비는 어떻게 해야하나요?",
                 author: "개발자지망생",
-                category: "프로젝트",
-                date: "2026-01-02",
-                helpfulCount: 10,
-                answersCount: 8,
+                category: .project,
+                like: 10,
+                createdAt: "2026-01-02",
+                isAccepted: false,
+                preview: "취업을 준비하면서 포트폴리오를 어떻게 구성해야 할지 고민입니다.",
+                commentCount: 8,
                 content: "취업을 준비하면서 포트폴리오를 어떻게 구성해야 할지 고민입니다.",
-                answers: []
+                isLike: false,
+                isAuthor: false,
+                comments: []
             ),
             Post(
                 id: 3,
                 title: "선배들과 친해지는 방법?",
                 author: "신입생",
-                category: "학교생활",
-                date: "2026-01-03",
-                helpfulCount: 10,
-                answersCount: 8,
+                category: .school,
+                like: 10,
+                createdAt: "2026-01-03",
+                isAccepted: false,
+                preview: "학교에서 선배들과 친해지고 싶은데 어떻게 해야 할까요?",
+                commentCount: 8,
                 content: "학교에서 선배들과 친해지고 싶은데 어떻게 해야 할까요?",
-                answers: []
+                isLike: false,
+                isAuthor: false,
+                comments: []
             )
         ]
     }
@@ -103,32 +113,35 @@ useEffect의 두 번째 인자인 의존성 배열(dependency array)은 "이 안
     // 게시글 선택
     func selectPost(_ post: Post) {
         selectedPost = post
-        isHelpful = false
     }
     
     // 카테고리 선택
-    func selectCategory(_ category: String?) {
+    func selectCategory(_ category: Category?) {
         selectedCategory = category
     }
     
-    // 좋아요 토글
-    func toggleHelpful() {
-        isHelpful.toggle()
+    // 유용해요 토글
+    func toggleLike(for post: Post) {
         // TODO: API 호출하여 좋아요 상태 업데이트
+        // POST /posts/{id}/like
     }
     
     // 새 게시글 추가
-    func addPost(title: String, author: String, category: String, content: String) {
+    func addPost(title: String, author: String, category: Category, content: String) {
         let newPost = Post(
             id: posts.count + 1,
             title: title,
             author: author,
             category: category,
-            date: "2026-01-18",
-            helpfulCount: 0,
-            answersCount: 0,
+            like: 0,
+            createdAt: "2026-01-18",
+            isAccepted: false,
+            preview: String(content.prefix(50)) + "...",
+            commentCount: 0,
             content: content,
-            answers: []
+            isLike: false,
+            isAuthor: true,
+            comments: []
         )
         posts.insert(newPost, at: 0)
     }

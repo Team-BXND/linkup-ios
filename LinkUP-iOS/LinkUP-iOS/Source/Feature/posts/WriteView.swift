@@ -12,14 +12,12 @@ struct WriteView: View {
     @Environment(\.dismiss) var dismiss
     @State private var title = ""
     @State private var nickname = ""
-    @State private var selectedCategory = ""
+    @State private var selectedCategory: Category? = nil
     @State private var content = ""
     @State private var showCategoryPicker = false
     @State private var showAlert = false
     @State private var alertMessage = ""
     @FocusState private var focusedField: Field?
-    
-    let categories = ["학교생활", "코드", "프로젝트"]
     
     enum Field {
         case title, nickname, content
@@ -31,7 +29,7 @@ struct WriteView: View {
             HStack {
                 Button(action: { dismiss() }) {
                     Image(systemName: "xmark")
-                        .font(.system(size: 20))
+                        .font(.bold(20))
                         .foregroundColor(.primary)
                 }
                 
@@ -46,11 +44,11 @@ struct WriteView: View {
                 // 제목 입력
                 HStack(spacing: 12) {
                     Text("Q")
-                        .font(.system(size: 28, weight: .bold))
+                        .font(.bold(28))
                         .foregroundColor(Color("MainColor"))
                     
                     TextField("제목을 입력하세요.", text: $title)
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(.semibold(16))
                         .focused($focusedField, equals: .title)
                 }
                 .padding()
@@ -59,7 +57,7 @@ struct WriteView: View {
                 
                 // 닉네임 입력
                 TextField("닉네임을 입력하세요.", text: $nickname)
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.semibold(16))
                     .foregroundColor(.gray)
                     .padding()
                     .background(Color(UIColor.systemGray6))
@@ -71,14 +69,14 @@ struct WriteView: View {
                     showCategoryPicker = true
                 }) {
                     HStack {
-                        Text(selectedCategory.isEmpty ? "카테고리를 선택하세요." : selectedCategory)
-                            .font(.system(size: 16, weight: .semibold))
-                            .foregroundColor(selectedCategory.isEmpty ? .gray : .primary)
+                        Text(selectedCategory?.rawValue ?? "카테고리를 선택하세요.")
+                            .font(.semibold(16))
+                            .foregroundColor(selectedCategory == nil ? .gray : .primary)
                         
                         Spacer()
                         
                         Image(systemName: "chevron.down")
-                            .font(.system(size: 14))
+                            .font(.semibold(14))
                             .foregroundColor(.gray)
                     }
                     .padding()
@@ -88,8 +86,8 @@ struct WriteView: View {
                 .actionSheet(isPresented: $showCategoryPicker) {
                     ActionSheet(
                         title: Text("카테고리 선택"),
-                        buttons: categories.map { category in
-                            .default(Text(category)) {
+                        buttons: Category.allCases.map { category in
+                            .default(Text(category.rawValue)) {
                                 selectedCategory = category
                             }
                         } + [.cancel(Text("취소"))]
@@ -100,14 +98,14 @@ struct WriteView: View {
                 ZStack(alignment: .topLeading) {
                     if content.isEmpty {
                         Text("본문을 입력하세요")
-                            .font(.system(size: 16, weight: .semibold))
+                            .font(.medium(16))
                             .foregroundColor(.gray)
                             .padding(.horizontal, 20)
                             .padding(.top, 20)
                     }
                     
                     TextEditor(text: $content)
-                        .font(.system(size: 16))
+                        .font(.medium(16))
                         .padding(.horizontal, 12)
                         .padding(.top, 12)
                         .focused($focusedField, equals: .content)
@@ -126,7 +124,7 @@ struct WriteView: View {
                 ForEach(["B", "I", "U", "S"], id: \.self) { label in
                     Button(action: {}) {
                         Text(label)
-                            .font(.system(size: 18, weight: .bold))
+                            .font(.bold(18))
                             .foregroundColor(.gray)
                             .modifier(TextStyleModifier(style: label))
                     }
@@ -134,13 +132,11 @@ struct WriteView: View {
                 
                 Button(action: {}) {
                     Image(systemName: "link")
-                        .font(.system(size: 18))
                         .foregroundColor(.gray)
                 }
                 
                 Button(action: {}) {
                     Image(systemName: "photo")
-                        .font(.system(size: 18))
                         .foregroundColor(.gray)
                 }
                 
@@ -161,7 +157,7 @@ struct WriteView: View {
                         return
                     }
                     
-                    if selectedCategory.isEmpty {
+                    guard let category = selectedCategory else {
                         alertMessage = "카테고리를 선택해주세요."
                         showAlert = true
                         return
@@ -177,14 +173,14 @@ struct WriteView: View {
                     viewModel.addPost(
                         title: title,
                         author: nickname,
-                        category: selectedCategory,
+                        category: category,
                         content: content
                     )
                     
                     dismiss()
                 }) {
                     Text("질문하기")
-                        .font(.system(size: 14, weight: .medium))
+                        .font(.medium(14))
                         .foregroundColor(.white)
                         .padding(.horizontal, 32)
                         .padding(.vertical, 12)

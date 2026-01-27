@@ -24,6 +24,11 @@ enum Category: String, CaseIterable, Identifiable, Codable {
     }
 }
 
+enum TabCase {
+    case hot
+    case list
+}
+
 // MARK: - 게시글 모델
 struct Post: Identifiable, Codable {
     let id: Int

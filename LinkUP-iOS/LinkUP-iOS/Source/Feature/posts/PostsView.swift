@@ -49,29 +49,29 @@ struct PostsView: View {
                         // 탭 버튼
                         HStack(spacing: 12) {
                             Button(action: {
-                                viewModel.selectedTab = 0
+                                viewModel.selectedTab = .hot
                                 viewModel.selectCategory(nil)
                             }) {
                                 Text("🔥가장 유용했던 글")
                                     .font(.bold(16))
                                     .padding(.horizontal, 20)
                                     .padding(.vertical, 10)
-                                    .background(viewModel.selectedTab == 0 ? Color("MainColor") : Color.white)
-                                    .foregroundColor(viewModel.selectedTab == 0 ? .white : .black)
+                                    .background(viewModel.selectedTab == .hot ? Color("MainColor") : Color.white)
+                                    .foregroundColor(viewModel.selectedTab == .hot ? .white : .black)
                                     .cornerRadius(25)
                                     .shadow(color: .black.opacity(0.1), radius: 2, y: 1)
                             }
                             
                             Button(action: {
-                                viewModel.selectedTab = 1
+                                viewModel.selectedTab = .list
                                 viewModel.selectCategory(nil)
                             }) {
                                 Text("🧐질문 목록")
                                     .font(.bold(16))
                                     .padding(.horizontal, 20)
                                     .padding(.vertical, 10)
-                                    .background(viewModel.selectedTab == 1 ? Color("MainColor") : Color.white)
-                                    .foregroundColor(viewModel.selectedTab == 1 ? .white : .black)
+                                    .background(viewModel.selectedTab == .list ? Color("MainColor") : Color.white)
+                                    .foregroundColor(viewModel.selectedTab == .list ? .white : .black)
                                     .cornerRadius(25)
                                     .shadow(color: .black.opacity(0.1), radius: 2, y: 1)
                             }
@@ -79,7 +79,7 @@ struct PostsView: View {
                         .padding(.leading, 32)
                         
                         // 카테고리 필터 (질문 목록 탭일 때만 표시)
-                        if viewModel.selectedTab == 1 {
+                        if viewModel.selectedTab == .list {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 12) {
                                     Button(action: {
@@ -122,7 +122,7 @@ struct PostsView: View {
                         
                         // 질문 목록
                         VStack(spacing: 12) {
-                            ForEach(viewModel.selectedTab == 1 ? viewModel.filteredPosts : viewModel.posts) { post in
+                            ForEach(viewModel.selectedTab == .list ? viewModel.filteredPosts : viewModel.posts) { post in
                                 NavigationLink(destination:
                                     PostsDetailView(post: post)
                                         .environmentObject(viewModel)

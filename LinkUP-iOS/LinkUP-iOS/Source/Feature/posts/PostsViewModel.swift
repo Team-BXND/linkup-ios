@@ -10,7 +10,7 @@ import Combine
 class PostsViewModel: ObservableObject {
     // 메인 화면 상태
     @Published var posts: [Post] = []
-    @Published var selectedTab: Int = 0
+    @Published var selectedTab: TabCase = .hot
     @Published var selectedCategory: Category? = nil
     
     // 상세 화면 상태

@@ -1,22 +1,35 @@
-//
-//  ContentView.swift
-//  LinkUP-iOS
-//
-//  Created by chanwoo on 12/30/25.
-//
-
 import SwiftUI
 
 struct MainView: View {
+    
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
-                .font(.bold(20))
+        NavigationStack {
+            ZStack {
+                VStack(spacing: 0) {
+                    HStack {
+                        Image("Logo")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(height: 40)
+                            .padding(.leading, 13)
+                        
+                        Spacer()
+                        
+                        NavigationLink(destination: LoginView()) {
+                            Text("TestLogin")
+                                .font(.system(size: 24))
+                                .foregroundColor(.blue)
+                                .padding(.trailing, 13)
+                        }
+                    }
+                    .frame(height: 40)
+                    .padding(.top, 60)
+                    
+                    Tabbar()
+                }
+                .ignoresSafeArea()
+            }
         }
-        .padding()
     }
 }
 

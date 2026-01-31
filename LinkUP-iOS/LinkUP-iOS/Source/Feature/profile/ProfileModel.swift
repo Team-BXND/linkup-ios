@@ -6,3 +6,8 @@
 //
 
 import Foundation
+
+enum Activity {
+    case Question
+    case Answer
+}

@@ -6,4 +6,4 @@
 *.xcodeproj/xcuserdata/
 xcuserdata/
 
-LinkUP-iOS/Source/Util/ServerUrl.swift
+LinkUP-iOS/LinkUP-iOS/Source/Util/ServerUrl.swift

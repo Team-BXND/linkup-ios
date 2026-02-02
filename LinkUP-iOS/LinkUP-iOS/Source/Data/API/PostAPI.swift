@@ -89,7 +89,14 @@ extension PostAPI: TargetType {
     }
     
     var headers: [String : String]? {
-        return ["Content-Type": "application/json"]
+        let token = UserDefaults.standard.string(forKey: "access")
+        switch self {
+        case .getpost:
+            return ["Content-Type": "application/json"]
+            
+        default:
+            return ["Content-Type": "application/json", "Authorization": "Bearer \(token!)"]
+        }
     }
     
     

@@ -13,10 +13,19 @@ struct UserActivity: ResponseProtocol {
 }
 
 struct Info: ResponseProtocol {
+    // 공통
     let id: Int
     let title: String
     let preview: String
     let category: Category
-    let answer: String
+    
+    // 답변
+    let answer: String?
+    
+    // 질문
+    let like: Int?
+    let commentCount: Int?
+    let isAccepted: Bool?
+    let page: Int?
 }
 

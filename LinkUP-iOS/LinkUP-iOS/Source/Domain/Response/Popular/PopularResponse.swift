@@ -12,7 +12,7 @@ struct PopularResponse: ResponseProtocol {
     let meta: PopularMetaInfo
 }
 
-struct PopularDataInfo: ResponseProtocol{
+struct PopularDataInfo: ResponseProtocol, Identifiable {
     let id: Int
     let title: String
     let author: String
@@ -21,7 +21,7 @@ struct PopularDataInfo: ResponseProtocol{
     let preview: String
     let isAccepted: Bool
     let commentCount: Int
-    let createdAt: Data
+    let createdAt: Date
 }
 
 struct PopularMetaInfo: ResponseProtocol {

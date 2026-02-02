@@ -18,9 +18,9 @@ struct RankingView: View {
                         .padding(.top, 16)
                     
                     VStack(alignment: .leading, spacing: 16) {
-                        ForEach(Array(viewModel.sortedRankings.prefix(3).enumerated()), id: \.element.id) { index, user in
-                            RankingTopView(user: user, rankIndex: index)
-                        }
+                        ForEach(viewModel.topRankings.indices, id: \.self) { index in
+                            RankingTopView(user: viewModel.topRankings[index], rankIndex: index)
+                            }
                     }
                     .padding(.horizontal, 32)
                     .padding(.bottom, 13)
@@ -33,9 +33,7 @@ struct RankingView: View {
                 .shadow(color: Color.black.opacity(0.06), radius: 1, x: 0, y: 4)
 
                 VStack(alignment: .leading, spacing: 24) {
-                    let listData = viewModel.sortedRankings
-                    
-                    ForEach(Array(listData.prefix(30).dropFirst(3).enumerated()), id: \.element.id) { index, user in
+                    ForEach(viewModel.rowRankings, id: \.rank) { user in
                         RankingRowView(user: user)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }

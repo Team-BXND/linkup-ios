@@ -61,7 +61,7 @@ import React, { useState, useEffect } from 'react';
                 isAuthor: false,
                 comments: [
                     Comment(
-                        commentId: 1,
+                        id: 1,
                         author: "Nickname",
                         content: """
 작성자님이 3번 항목에서 시뮬레이션하신 과정이 정확히 리액트가 동작하는 방식입니다. 고등학생이신데 라이프사이클 흐름을 아주 잘 파악하고 계시네요!
@@ -110,6 +110,77 @@ useEffect의 두 번째 인자인 의존성 배열(dependency array)은 "이 안
         ]
     }
     
+    // MARK: - API Methods
+    
+    // 게시글 목록 조회
+    func fetchPosts(category: Category, page: Int = 1) {
+        // TODO: API 호출
+        // GET /posts?category={category}&page={page}
+    }
+    
+    // 게시글 상세 조회
+    func fetchPostDetail(id: Int) {
+        // TODO: API 호출
+        // GET /posts/{id}
+    }
+    
+    // 게시글 작성
+    func createPost(category: Category, title: String, content: String, author: String) {
+        // TODO: API 호출
+        // POST /posts
+        let request = CreatePostRequest(
+            category: category.apiValue,
+            title: title,
+            content: content,
+            author: author
+        )
+    }
+    
+    // 게시글 수정
+    func updatePost(id: Int, category: Category, title: String, content: String) {
+        // TODO: API 호출
+        // PATCH /posts/{id}
+        let request = UpdatePostRequest(
+            category: category.apiValue,
+            title: title,
+            content: content
+        )
+    }
+    
+    // 게시글 삭제
+    func deletePost(id: Int) {
+        // TODO: API 호출
+        // DELETE /posts/{id}
+    }
+    
+    // 답변 작성
+    func createAnswer(postId: Int, content: String) {
+        // TODO: API 호출
+        // POST /posts/{id}/answer
+        let request = CreateAnswerRequest(content: content)
+    }
+    
+    // 답변 삭제
+    func deleteAnswer(postId: Int, answerId: Int) {
+        // TODO: API 호출
+        // DELETE /posts/{id}/answer
+    }
+    
+    // 답변 채택
+    func acceptAnswer(postId: Int, answerId: Int) {
+        // TODO: API 호출
+        // POST /posts/{id}/accept/{ansid}
+        let request = AcceptAnswerRequest(commentId: answerId)
+    }
+    
+    // 유용해요 토글
+    func toggleLike(postId: Int) {
+        // TODO: API 호출
+        // POST /posts/{id}/like
+    }
+    
+    // MARK: - UI Methods
+    
     // 게시글 선택
     func selectPost(_ post: Post) {
         selectedPost = post
@@ -118,31 +189,5 @@ useEffect의 두 번째 인자인 의존성 배열(dependency array)은 "이 안
     // 카테고리 선택
     func selectCategory(_ category: Category?) {
         selectedCategory = category
-    }
-    
-    // 유용해요 토글
-    func toggleLike(for post: Post) {
-        // TODO: API 호출하여 좋아요 상태 업데이트
-        // POST /posts/{id}/like
-    }
-    
-    // 새 게시글 추가
-    func addPost(title: String, author: String, category: Category, content: String) {
-        let newPost = Post(
-            id: posts.count + 1,
-            title: title,
-            author: author,
-            category: category,
-            like: 0,
-            createdAt: "2026-01-18",
-            isAccepted: false,
-            preview: String(content.prefix(50)) + "...",
-            commentCount: 0,
-            content: content,
-            isLike: false,
-            isAuthor: true,
-            comments: []
-        )
-        posts.insert(newPost, at: 0)
     }
 }

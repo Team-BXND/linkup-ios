@@ -13,7 +13,6 @@ struct RankingResponse: ResponseProtocol {
 
 struct RankingInfo: ResponseProtocol {
     let username: String
-    let email: String
     let point: Int
-    let ranking: Int
+    let rank: Int
 }

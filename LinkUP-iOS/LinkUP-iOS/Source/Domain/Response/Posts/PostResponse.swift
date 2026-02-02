@@ -7,13 +7,12 @@
 
 import Foundation
 
-
-struct PostModel: ResponseProtocol {
-    let data: [Data]
-    let meta: Meta
+struct PostsResponse: Codable {
+    let data: [PostListItem]
+    let meta: PageMeta
 }
 
-struct Data: ResponseProtocol {
+struct PostListItem: Codable {
     let id: Int
     let title: String
     let author: String
@@ -22,10 +21,10 @@ struct Data: ResponseProtocol {
     let preview: String
     let isAccepted: Bool
     let commentCount: Int
-    let createdAt: Date
+    let createdAt: String
 }
 
-struct Meta: ResponseProtocol {
+struct PageMeta: Codable {
     let total: Int
     let page: Int
     let pageSize: Int

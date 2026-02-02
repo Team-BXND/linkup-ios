@@ -33,7 +33,7 @@ struct PostsDetailView: View {
                     
                     // 유용해요 버튼
                     Button(action: {
-                        viewModel.toggleLike(for: post)
+                        viewModel.toggleLike(postId: post.id)
                     }) {
                         Image(systemName: (post.isLike ?? false) ? "hand.thumbsup.fill" : "hand.thumbsup")
                             .font(.semibold(12))
@@ -152,8 +152,8 @@ struct PostsDetailView: View {
             like: 5,
             createdAt: "2026-01-18",
             isAccepted: false,
-            preview: nil,
-            commentCount: nil,
+            preview: "샘플 미리보기",
+            commentCount: 0,
             content: "샘플 내용입니다.",
             isLike: false,
             isAuthor: false,

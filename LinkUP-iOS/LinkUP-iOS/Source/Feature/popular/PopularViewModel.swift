@@ -9,15 +9,16 @@ import SwiftUI
 import Combine
 
 class PopularViewModel: ObservableObject {
-    @Published var populars: [PopularModel] = []
-
+    @Published var populars: [PopularResponse] = []
+    @Published var hotPopulars: [PopularResponse] = []
+    
     init() {
         loadSampleData()
     }
-
+    
     private func loadSampleData() {
         populars = [
-            PopularModel(
+            PopularResponse(
                 id: 1,
                 title: "React에서 무한 렌더링 오류",
                 author: "사랑해요",
@@ -28,7 +29,7 @@ class PopularViewModel: ObservableObject {
                 commentCount: 3,
                 createdAt: Date()
             ),
-            PopularModel(
+            PopularResponse(
                 id: 2,
                 title: "포트폴리오 준비는 어떻게 해야 하나요?",
                 author: "사랑해요",
@@ -39,7 +40,7 @@ class PopularViewModel: ObservableObject {
                 commentCount: 2,
                 createdAt: Date()
             ),
-            PopularModel(
+            PopularResponse(
                 id: 3,
                 title: "선배들과 친해지는 방법?",
                 author: "사랑해요",
@@ -50,7 +51,7 @@ class PopularViewModel: ObservableObject {
                 commentCount: 1,
                 createdAt: Date()
             ),
-            PopularModel(
+            PopularResponse(
                 id: 4,
                 title: "프로젝트 기획은 어떻게 하나요? ㅠㅠㅠㅠ",
                 author: "사랑해요",
@@ -61,7 +62,7 @@ class PopularViewModel: ObservableObject {
                 commentCount: 0,
                 createdAt: Date()
             ),
-            PopularModel(
+            PopularResponse(
                 id: 5,
                 title: "프로젝트 기획은 어떻게 하나요? ㅠㅠㅠㅠ",
                 author: "사랑해요",
@@ -73,5 +74,57 @@ class PopularViewModel: ObservableObject {
                 createdAt: Date()
             )
         ]
+    }
+    
+    private func loadHotSampleData() {
+        hotPopulars = [
+            PopularResponse(
+                id: 10,
+                title: "이번 주 가장 핫한 질문!",
+                author: "핫이슈",
+                category: .code,
+                like: 25,
+                preview: "이번 주에 가장 많은 유용해요를 받은 질문입니다.",
+                isAccepted: true,
+                commentCount: 15,
+                createdAt: Date()
+            ),
+            PopularResponse(
+                id: 11,
+                title: "최근 트렌드 기술은?",
+                author: "테크리더",
+                category: .project,
+                like: 20,
+                preview: "요즘 핫한 기술 스택이 궁금합니다.",
+                isAccepted: true,
+                commentCount: 12,
+                createdAt: Date()
+            ),
+            PopularResponse(
+                id: 12,
+                title: "학교 생활 꿀팁 공유해요!",
+                author: "선배님",
+                category: .school,
+                like: 18,
+                preview: "신입생들을 위한 꿀팁 모음입니다.",
+                isAccepted: false,
+                commentCount: 8,
+                createdAt: Date()
+            )
+        ]
+    }
+    
+    // /popular
+    func fetchPopularQuestions(page: Int = 1) {
+        // GET /popular?page={page}
+        
+        loadSampleData()
+    }
+    
+    // /popular/hot
+    func fetchHotQuestions(page: Int = 1) {
+        // GET /popular/hot?page={page}
+        
+        loadHotSampleData()
     }
 }

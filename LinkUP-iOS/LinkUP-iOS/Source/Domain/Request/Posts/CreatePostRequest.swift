@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct PostingModel: RequestProtocol {
-    let category: Category
+struct CreatePostRequest: Codable {
+    let category: String
     let title: String
     let content: String
-    let author: String?
+    let author: String
 }

@@ -7,11 +7,8 @@
 
 import SwiftUI
 
-struct SignupView: View {
-    @State private var email = ""
-    @State private var nickname = ""
+struct PWView: View {
     @State private var password = ""
-    @State private var confirmPassword = ""
     
     var body: some View {
         VStack(spacing: 0) {
@@ -19,31 +16,19 @@ struct SignupView: View {
             
             Image("Logo2")
             
-            Text("회원가입")
+            Text("비밀번호 찾기")
                 .font(.system(size: 40, weight: .semibold))
                 .padding(.top, 4)
                 .padding(.bottom, 64)
             
             VStack(spacing: 12) {
-                TextField("이메일을 입력하세요.", text: $email)
+                TextField("새 비밀번호를 입력하세요", text: $password)
                     .frame(height: 40)
                     .padding(.horizontal, 16)
                     .background(Color(.systemGray6))
                     .cornerRadius(14)
                 
-                TextField("닉네임을 입력하세요.", text: $nickname)
-                    .frame(height: 40)
-                    .padding(.horizontal, 16)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(14)
-                
-                SecureField("비밀번호를 입력하세요.", text: $password)
-                    .frame(height: 40)
-                    .padding(.horizontal, 16)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(14)
-                
-                SecureField("비밀번호를 다시 입력하세요.", text: $confirmPassword)
+                SecureField("새 비밀번호를 다시 입력하세요.", text: $password)
                     .frame(height: 40)
                     .padding(.horizontal, 16)
                     .background(Color(.systemGray6))
@@ -54,18 +39,12 @@ struct SignupView: View {
             
             
             VStack(spacing: 16) {
-                Button("회원가입") { }
+                Button("비밀번호 변경") { }
                     .font(.system(size: 20, weight: .medium))
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity, minHeight: 40)
                     .background(Color("MainColor"))
                     .cornerRadius(10)
-                
-                Button("로그인 하기") { }
-                    .font(.system(size: 20, weight: .medium))
-                    .foregroundColor(Color("MainColor"))
-                    .frame(maxWidth: .infinity, minHeight: 40)
-                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color("MainColor"), lineWidth: 1))
             }
             .padding(.horizontal, 32)
             Spacer()
@@ -74,5 +53,5 @@ struct SignupView: View {
 }
 
 #Preview {
-    SignupView()
+    PWView()
 }

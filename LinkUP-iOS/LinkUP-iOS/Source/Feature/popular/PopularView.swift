@@ -35,10 +35,8 @@ struct PopularView: View {
                     Text("🔥 지금 뜨거운 Q&A")
                         .font(.semibold(18))
                     
-                    ForEach(Array(viewModel.populars.enumerated()), id: \.element.id) { index, popular in
-                        PopularQuestionCardView(
-                            popular: popular
-                        )
+                    ForEach(viewModel.populars) { popular in
+                        PopularQuestionCardView(popular: popular)
                     }
                 }
                 .padding(16)
@@ -48,8 +46,12 @@ struct PopularView: View {
                 .shadow(color: Color.black.opacity(0.06), radius: 1, x: -2, y: 0)
                 .shadow(color: Color.black.opacity(0.06), radius: 1, x: 0, y: 4)
                 .padding(.horizontal, 32)
+                
                 Spacer(minLength: 0)
             }
+        }
+        .onAppear {
+            viewModel.fetchPopularQuestions()
         }
     }
 }

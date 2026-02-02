@@ -1,18 +1,18 @@
 //
-//  PostResponse.swift
+//  PopularResponse.swift
 //  LinkUP-iOS
 //
-//  Created by maple on 1/25/26.
+//  Created by 잇쬬 on 1/14/26.
 //
 
 import Foundation
 
-struct PostsResponse: Codable {
-    let data: [PostListItem]
-    let meta: PageMeta
+struct PopularResponse: ResponseProtocol {
+    let data: [PopularDataInfo]
+    let meta: PopularMetaInfo
 }
 
-struct PostListItem: Codable {
+struct PopularDataInfo: ResponseProtocol{
     let id: Int
     let title: String
     let author: String
@@ -21,10 +21,10 @@ struct PostListItem: Codable {
     let preview: String
     let isAccepted: Bool
     let commentCount: Int
-    let createdAt: String
+    let createdAt: Data
 }
 
-struct PageMeta: Codable {
+struct PopularMetaInfo: ResponseProtocol {
     let total: Int
     let page: Int
     let pageSize: Int

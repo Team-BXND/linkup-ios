@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PopularQuestionCardView: View {
-    let popular: PopularModel
+    let popular: PopularDataInfo
     var body: some View {
         HStack(alignment: .center, spacing: 20) {
             Text("\(popular.id)")

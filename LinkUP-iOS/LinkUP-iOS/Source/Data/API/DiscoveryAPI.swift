@@ -5,13 +5,13 @@
 //  Created by maple on 1/23/26.
 //
 
+import Foundation
 import Moya
 internal import Alamofire
-import Foundation
 
 enum DiscoveryAPI {
     case popular(page: Int)
-    case hot(page: Int)
+    case popularhot(page: Int)
     case ranking
 }
 
@@ -22,10 +22,9 @@ extension DiscoveryAPI: TargetType {
     
     var path: String {
         switch self {
-            
-        case .popular: "popular"
-        case .hot: "popular/hot"
-        case .ranking: "ranking"
+            case .popular: "popular"
+            case .popularhot: "popular/hot"
+            case .ranking: "ranking"
         }
     }
     
@@ -35,17 +34,15 @@ extension DiscoveryAPI: TargetType {
     
     var task: Moya.Task {
         switch self {
-            
-        case .popular(page: let page), .hot(page: let page):
-            return .requestParameters(parameters: ["page": page], encoding: URLEncoding.queryString)
-        case .ranking:
-            return .requestPlain
+            case .popular(page: let page), .popularhot(page: let page):
+                return .requestParameters(parameters: ["page": page], encoding: URLEncoding.queryString)
+            case .ranking:
+                return .requestPlain
         }
     }
     
     var headers: [String : String]? {
         return ["Content-Type": "application/json"]
     }
-    
     
 }

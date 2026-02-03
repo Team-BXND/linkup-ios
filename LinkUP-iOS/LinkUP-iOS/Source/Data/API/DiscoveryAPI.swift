@@ -16,6 +16,7 @@ enum DiscoveryAPI {
 }
 
 extension DiscoveryAPI: TargetType {
+    
     var baseURL: URL {
         return URL(string: baseurl)!
     }

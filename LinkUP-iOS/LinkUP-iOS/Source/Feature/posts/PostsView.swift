@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PostsView: View {
-    @StateObject private var viewModel = PostsViewModel()
+    @StateObject private var viewModel = PostsViewModel.shared
     @State private var showWriteView = false
     
     var body: some View {

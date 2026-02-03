@@ -16,6 +16,8 @@ class PostsViewModel: ObservableObject {
     // 상세 화면 상태
     @Published var selectedPost: Post?
     
+    static let shared = PostsViewModel()
+    
     init() {
         loadSampleData()
     }

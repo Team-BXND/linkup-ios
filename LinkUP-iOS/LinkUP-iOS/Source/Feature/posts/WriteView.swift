@@ -223,3 +223,23 @@ struct TextStyleModifier: ViewModifier {
     WriteView()
         .environmentObject(PostsViewModel())
 }
+// MARK: - Temporary shim to satisfy WriteView call site
+// Remove or replace this when your real implementation exists in PostsViewModel.
+extension PostsViewModel {
+    @MainActor
+    func addPost(title: String, author: String, category: Category, content: String) {
+        // If your PostsViewModel already has an API to add posts, replace this body
+        // to forward to it. This shim prevents dynamicMember/binding errors.
+        NotificationCenter.default.post(
+            name: Notification.Name("PostsViewModel.addPost"),
+            object: nil,
+            userInfo: [
+                "title": title,
+                "author": author,
+                "category": category.rawValue,
+                "content": content
+            ]
+        )
+    }
+}
+

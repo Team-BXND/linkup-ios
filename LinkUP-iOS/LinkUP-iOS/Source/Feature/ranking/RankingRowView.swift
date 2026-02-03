@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RankingRowView: View {
-    let user: RankingModel
+    let user: RankingInfo
     var body: some View {
         HStack(spacing: 8) {
             Text("\(user.rank)등")

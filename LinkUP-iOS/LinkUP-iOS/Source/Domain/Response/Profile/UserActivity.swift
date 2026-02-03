@@ -9,7 +9,7 @@ import Foundation
 
 struct UserActivity: ResponseProtocol {
     let data: [Info]
-    let meta: Meta
+    let meta: PageMeta
 }
 
 struct Info: ResponseProtocol {

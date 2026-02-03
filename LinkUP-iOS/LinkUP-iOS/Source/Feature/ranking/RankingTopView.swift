@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct RankingTopView: View {
-    let user: RankingModel
+    let user: RankingInfo
     let rankIndex: Int
 
     private var style: RankStyle {

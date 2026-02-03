@@ -11,8 +11,8 @@ internal import Alamofire
 enum PostAPI {
     case getposting(category: Category, page: Int)
     case getpost(id: Int) //query parameter
-    case posting(content: PostingModel)
-    case patchposting(id: Int, content: PostingModel)
+    case posting(content: CreatePostRequest)
+    case patchposting(id: Int, content: UpdatePostRequest)
     case deleteposting(id: Int)
     case answering(content: String, id: Int)
     case deleteanswer(id: Int)
@@ -73,7 +73,10 @@ extension PostAPI: TargetType {
         case .getposting(category: let category, page: let page):
                 .requestCompositeParameters(bodyParameters: ["category": category], bodyEncoding: requestEncoder, urlParameters: ["page": page])
             
-        case .posting(content: let content), .patchposting(_, content: let content):
+        case .posting(content: let content):
+                .requestJSONEncodable(content)
+            
+        case  .patchposting(_, content: let content):
                 .requestJSONEncodable(content)
             
         case .answering(content: let content):

@@ -9,8 +9,8 @@ import SwiftUI
 import Combine
 
 class PopularViewModel: ObservableObject {
-    @Published var populars: [PopularResponse] = []
-    @Published var hotPopulars: [PopularResponse] = []
+    @Published var populars: [PopularDataInfo] = []
+    @Published var hotPopulars: [PopularDataInfo] = []
     
     init() {
         loadSampleData()
@@ -18,7 +18,7 @@ class PopularViewModel: ObservableObject {
     
     private func loadSampleData() {
         populars = [
-            PopularResponse(
+            PopularDataInfo(
                 id: 1,
                 title: "React에서 무한 렌더링 오류",
                 author: "사랑해요",
@@ -29,7 +29,7 @@ class PopularViewModel: ObservableObject {
                 commentCount: 3,
                 createdAt: Date()
             ),
-            PopularResponse(
+            PopularDataInfo(
                 id: 2,
                 title: "포트폴리오 준비는 어떻게 해야 하나요?",
                 author: "사랑해요",
@@ -40,7 +40,7 @@ class PopularViewModel: ObservableObject {
                 commentCount: 2,
                 createdAt: Date()
             ),
-            PopularResponse(
+            PopularDataInfo(
                 id: 3,
                 title: "선배들과 친해지는 방법?",
                 author: "사랑해요",
@@ -51,7 +51,7 @@ class PopularViewModel: ObservableObject {
                 commentCount: 1,
                 createdAt: Date()
             ),
-            PopularResponse(
+            PopularDataInfo(
                 id: 4,
                 title: "프로젝트 기획은 어떻게 하나요? ㅠㅠㅠㅠ",
                 author: "사랑해요",
@@ -62,7 +62,7 @@ class PopularViewModel: ObservableObject {
                 commentCount: 0,
                 createdAt: Date()
             ),
-            PopularResponse(
+            PopularDataInfo(
                 id: 5,
                 title: "프로젝트 기획은 어떻게 하나요? ㅠㅠㅠㅠ",
                 author: "사랑해요",
@@ -78,7 +78,7 @@ class PopularViewModel: ObservableObject {
     
     private func loadHotSampleData() {
         hotPopulars = [
-            PopularResponse(
+            PopularDataInfo(
                 id: 10,
                 title: "이번 주 가장 핫한 질문!",
                 author: "핫이슈",
@@ -89,7 +89,7 @@ class PopularViewModel: ObservableObject {
                 commentCount: 15,
                 createdAt: Date()
             ),
-            PopularResponse(
+            PopularDataInfo(
                 id: 11,
                 title: "최근 트렌드 기술은?",
                 author: "테크리더",
@@ -100,7 +100,7 @@ class PopularViewModel: ObservableObject {
                 commentCount: 12,
                 createdAt: Date()
             ),
-            PopularResponse(
+            PopularDataInfo(
                 id: 12,
                 title: "학교 생활 꿀팁 공유해요!",
                 author: "선배님",

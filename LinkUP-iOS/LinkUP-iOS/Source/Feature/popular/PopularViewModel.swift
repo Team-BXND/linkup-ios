@@ -16,11 +16,6 @@ class PopularViewModel: ObservableObject {
     
     private let service = DiscoveryService.shared
     
-    init() {
-        fetchPopular()
-        fetchHotPopular()
-    }
-    
     private func loadPopularSampleData() {
         populars = [
             PopularDataInfo(
@@ -126,7 +121,6 @@ class PopularViewModel: ObservableObject {
                 self.populars = response.data
             } catch {
                 print("인기 질문 페치 실패: \(error.localizedDescription)")
-                self.loadPopularSampleData()
             }
         }
     }
@@ -138,7 +132,6 @@ class PopularViewModel: ObservableObject {
                 self.hotPopulars = response.data
             } catch {
                 print("핫 질문 페치 실패: \(error.localizedDescription)")
-                self.loadHotPopularSampleData()
             }
         }
     }

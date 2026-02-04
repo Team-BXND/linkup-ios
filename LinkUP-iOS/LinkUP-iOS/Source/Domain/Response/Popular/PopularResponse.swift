@@ -12,7 +12,7 @@ struct PopularResponse: ResponseProtocol {
     let meta: PopularMetaInfo
 }
 
-struct PopularDataInfo: ResponseProtocol, Identifiable {
+struct PopularDataInfo: ResponseProtocol, Identifiable, Hashable {
     let id: Int
     let title: String
     let author: String

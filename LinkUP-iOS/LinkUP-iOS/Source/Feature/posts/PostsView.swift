@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct PostsView: View {
-    @StateObject private var viewModel = PostsViewModel()
+    @StateObject private var viewModel = PostsViewModel.shared
     @State private var showWriteView = false
     
     var body: some View {
@@ -25,19 +25,19 @@ struct PostsView: View {
                         // 카드 배너
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 12) {
-                                Image("Banner1")
+                                Image("School")
                                     .resizable()
                                     .scaledToFit()
                                     .frame(height: 180)
                                     .cornerRadius(20)
                                 
-                                Image("Banner2")
+                                Image("Code")
                                     .resizable()
                                     .scaledToFit()
                                     .frame(height: 180)
                                     .cornerRadius(20)
                                 
-                                Image("Banner3")
+                                Image("Project")
                                     .resizable()
                                     .scaledToFit()
                                     .frame(height: 180)

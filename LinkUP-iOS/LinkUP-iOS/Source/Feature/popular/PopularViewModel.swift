@@ -8,15 +8,15 @@
 import SwiftUI
 import Combine
 
+@MainActor
 class PopularViewModel: ObservableObject {
+    
     @Published var populars: [PopularDataInfo] = []
     @Published var hotPopulars: [PopularDataInfo] = []
     
-    init() {
-        loadSampleData()
-    }
+    private let service = DiscoveryService.shared
     
-    private func loadSampleData() {
+    private func loadPopularSampleData() {
         populars = [
             PopularDataInfo(
                 id: 1,
@@ -76,7 +76,7 @@ class PopularViewModel: ObservableObject {
         ]
     }
     
-    private func loadHotSampleData() {
+    private func loadHotPopularSampleData() {
         hotPopulars = [
             PopularDataInfo(
                 id: 10,
@@ -114,17 +114,26 @@ class PopularViewModel: ObservableObject {
         ]
     }
     
-    // /popular
-    func fetchPopularQuestions(page: Int = 1) {
-        // GET /popular?page={page}
-        
-        loadSampleData()
+    func fetchPopular(page: Int = 1) {
+        Task {
+            do {
+                let response = try await service.fetchPopular(type: .popular, page: page)
+                self.populars = response.data
+            } catch {
+                print("인기 질문 페치 실패: \(error.localizedDescription)")
+            }
+        }
     }
     
-    // /popular/hot
-    func fetchHotQuestions(page: Int = 1) {
-        // GET /popular/hot?page={page}
-        
-        loadHotSampleData()
+    func fetchHotPopular(page: Int = 1) {
+        Task {
+            do {
+                let response = try await service.fetchPopular(type: .popularhot, page: page)
+                self.hotPopulars = response.data
+            } catch {
+                print("핫 질문 페치 실패: \(error.localizedDescription)")
+            }
+        }
     }
+    
 }

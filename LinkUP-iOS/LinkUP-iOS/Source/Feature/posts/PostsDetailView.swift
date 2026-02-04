@@ -48,7 +48,7 @@ struct PostsDetailView: View {
                 
                 // 메타 정보
                 HStack(spacing: 8) {
-                    Text("\(post.author)님")
+                    Text("\(post.author) 님")
                         .font(.medium(10))
                         .foregroundColor(.gray)
                     
@@ -96,7 +96,7 @@ struct PostsDetailView: View {
                                     .background(Color.red.opacity(0.1))
                                     .clipShape(Circle())
                                 
-                                Text("\(comment.author)님의 답변")
+                                Text("\(comment.author) 님의 답변")
                                     .font(.bold(14))
                                 
                                 Spacer()

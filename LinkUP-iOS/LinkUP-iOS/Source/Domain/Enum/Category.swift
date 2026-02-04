@@ -28,4 +28,13 @@ enum Category: String, CaseIterable, Identifiable, Codable {
         case .project: return "project"
         }
     }
+    
+    var image: String {
+        switch self {
+        case .all: ""
+        case .school: "School"
+        case .code: "Code"
+        case .project: "Project"
+        }
+    }
 }

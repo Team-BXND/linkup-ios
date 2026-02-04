@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PopularView: View {
     @StateObject private var viewModel = PopularViewModel()
+    @StateObject private var postsVM = PostsViewModel.shared
     @State private var selectedCategory: Category?
     var body: some View {
         NavigationStack {
@@ -24,27 +25,9 @@ struct PopularView: View {
                     
                     ScrollView(.horizontal, showsIndicators: false) {
                         HStack(spacing: 12) {
-                            Button(action: {
-                                PostsViewModel.shared.selectedTab = .list
-                                PostsViewModel.shared.selectCategory(.school)
-                                selectedCategory = .school
-                            }) {
-                                Image("School")
-                            }
-                            Button(action: {
-                                PostsViewModel.shared.selectedTab = .list
-                                PostsViewModel.shared.selectCategory(.code)
-                                selectedCategory = .code
-                            }) {
-                                Image("Code")
-                            }
-                            Button(action: {
-                                PostsViewModel.shared.selectedTab = .list
-                                PostsViewModel.shared.selectCategory(.project)
-                                selectedCategory = .project
-                            }) {
-                                Image("Project")
-                            }
+                            CategoryNavButton(selectedCategory: $selectedCategory, category: .school, imageName: "School")
+                            CategoryNavButton(selectedCategory: $selectedCategory, category: .code, imageName: "Code")
+                            CategoryNavButton(selectedCategory: $selectedCategory, category: .project, imageName: "Project")
                         }
                         .padding(.horizontal, 32)
                         .buttonStyle(PlainButtonStyle())
@@ -57,7 +40,10 @@ struct PopularView: View {
                             .font(.semibold(18))
                         
                         ForEach(viewModel.hotPopulars) { popular in
-                            PopularQuestionCardView(popular: popular)
+                            NavigationLink(value: popular) {
+                                PopularQuestionCardView(popular: popular)
+                            }
+                            .buttonStyle(PlainButtonStyle())
                         }
                     }
                     .padding(16)
@@ -74,10 +60,40 @@ struct PopularView: View {
             .navigationDestination(item: $selectedCategory) { category in
                 PostsView()
             }
+            .navigationDestination(for: PopularDataInfo.self) { popular in
+                let post = Post(
+                    id: popular.id,
+                    title: popular.title,
+                    author: popular.author,
+                    category: popular.category,
+                    like: popular.like,
+                    createdAt: "\(popular.createdAt)",
+                    isAccepted: popular.isAccepted,
+                    preview: popular.preview,
+                    commentCount: popular.commentCount
+                )
+                PostsDetailView(post: post)
+                    .environmentObject(postsVM)
+            }
             .onAppear {
                 viewModel.fetchPopular()
                 viewModel.fetchHotPopular()
             }
+        }
+    }
+}
+
+struct CategoryNavButton: View {
+    @Binding var selectedCategory: Category?
+    let category: Category
+    let imageName: String
+    var body: some View {
+        Button(action: {
+            PostsViewModel.shared.selectedTab = .list
+            PostsViewModel.shared.selectCategory(category)
+            selectedCategory = category
+        }) {
+            Image(imageName)
         }
     }
 }

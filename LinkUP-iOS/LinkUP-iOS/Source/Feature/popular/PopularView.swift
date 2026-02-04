@@ -76,7 +76,6 @@ struct PopularView: View {
                     .environmentObject(postsVM)
             }
             .onAppear {
-                viewModel.fetchPopular()
                 viewModel.fetchHotPopular()
             }
         }

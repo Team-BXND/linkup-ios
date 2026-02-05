@@ -27,7 +27,7 @@ extension RankStyle {
 
         case 1:
             return RankStyle(
-                imageName: "2st",
+                imageName: "2nd",
                 imageSize: 40,
                 nameFont: .system(size: 24, weight: .bold),
                 pointFont: .system(size: 12, weight: .medium)
@@ -35,7 +35,7 @@ extension RankStyle {
 
         case 2:
             return RankStyle(
-                imageName: "3st",
+                imageName: "3nd",
                 imageSize: 40,
                 nameFont: .system(size: 24, weight: .bold),
                 pointFont: .system(size: 12, weight: .medium)

@@ -12,9 +12,7 @@ class RankingViewModel: ObservableObject {
     
     @Published var rankings: RankingResponse = RankingResponse(data: [])
     
-    init() {
-        loadSampleData()
-    }
+    private let service = DiscoveryService.shared
     
     private var sortedRankings: [RankingInfo] {
         rankings.data.sorted {
@@ -42,5 +40,16 @@ class RankingViewModel: ObservableObject {
                 RankingInfo(username: "정윤희", point: 28, rank: 4),
             ]
         )
+    }
+    
+    func fetchRanking() {
+        Task {
+            do {
+                let response = try await service.fetchRanking()
+                self.rankings = response
+            } catch {
+                print("랭킹 페치 실패: \(error.localizedDescription)")
+            }
+        }
     }
 }

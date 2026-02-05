@@ -20,7 +20,7 @@ struct RankingView: View {
                     VStack(alignment: .leading, spacing: 16) {
                         ForEach(viewModel.topRankings.indices, id: \.self) { index in
                             RankingTopView(user: viewModel.topRankings[index], rankIndex: index)
-                            }
+                        }
                     }
                     .padding(.horizontal, 32)
                     .padding(.bottom, 13)
@@ -50,6 +50,9 @@ struct RankingView: View {
             }
             .padding(.horizontal, 32)
             .padding(.top, 24)
+        }
+        .onAppear {
+            viewModel.fetchRanking()
         }
     }
 }

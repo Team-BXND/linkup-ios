@@ -12,6 +12,7 @@ struct TokenResponse: ResponseProtocol {
 }
 
 struct Token: ResponseProtocol {
-    let accessToken: String
-    let responesToken: String
+    let accessToken: String?
+    let responesToken: String?
+    let message: String?
 }

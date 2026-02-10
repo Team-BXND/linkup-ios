@@ -22,10 +22,10 @@ class ProfileService {
         return try filteredResponse.map(UserInfo.self)
     }
     
-    func fetchUserActivity(Activity: Activity, page: Int) async throws -> UserActivity {
+    func fetchUserActivity(type: Activity, page: Int) async throws -> UserActivity {
         
         let response = try await {
-            switch Activity {
+            switch type {
             case .Question:
                 return try await provider.request(target: .myquestion(page: page))
             case .Answer:

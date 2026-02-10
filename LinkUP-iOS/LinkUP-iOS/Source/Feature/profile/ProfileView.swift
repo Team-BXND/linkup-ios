@@ -8,95 +8,111 @@
 import SwiftUI
 
 struct ProfileView: View {
+    @State private var moveToActivity: Bool = false
+    @State var activity: Activity = .Question
+    @State var VM = ProfileViewModel()
+        
+    
     var body: some View {
-        VStack{
-            RoundedRectangle(cornerRadius: 16)
-                .frame(width: 330, height: 370)
-                .foregroundStyle(.white)
-                .shadow(radius: 3)
-                .overlay(alignment: .topLeading){
-                    VStack(alignment: .leading) {
-                        Text("프로필")
-                            .font(.bold(20))
-                            .padding(.bottom, 24)
-                        
-                        InfoItem("닉네임", "임시")
-                        
-                        InfoItem("이메일", "임시")
-                        
-                        InfoItem("답변자 순위", 1, "위")
-                        
-                        InfoItem("포인트", 1000, " P")
-                            .padding(.bottom, 32)
-                        
-                        HStack{
-                            Spacer()
-                            Button{
-                                
-                            } label: {
-                                ZStack{
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .frame(width: 110, height: 35)
-                                        .foregroundStyle(.sub)
-                                    Text("로그아웃")
-                                        .font(.medium(16))
-                                        .foregroundStyle(.white)
+        NavigationStack {
+            VStack{
+                RoundedRectangle(cornerRadius: 16)
+                    .frame(width: 330, height: 370)
+                    .foregroundStyle(.white)
+                    .shadow(radius: 3)
+                    .overlay(alignment: .topLeading){
+                        VStack(alignment: .leading) {
+                            Text("프로필")
+                                .font(.bold(20))
+                                .padding(.bottom, 24)
+                            
+                            InfoItem("닉네임", VM.userInfo.userName)
+                            
+                            InfoItem("이메일", VM.userInfo.email)
+                            
+                            InfoItem("답변자 순위", VM.userInfo.ranking, "위")
+                            
+                            InfoItem("포인트", 1000, " P")
+                                .padding(.bottom, 32)
+                            
+                            HStack{
+                                Spacer()
+                                Button{
+                                    
+                                } label: {
+                                    ZStack{
+                                        RoundedRectangle(cornerRadius: 10)
+                                            .frame(width: 110, height: 35)
+                                            .foregroundStyle(.sub)
+                                        Text("로그아웃")
+                                            .font(.medium(16))
+                                            .foregroundStyle(.white)
+                                    }
                                 }
                             }
                         }
-                    }
-                    .padding(16)
-                }
-                .padding(.bottom, 20)
-            
-            Button{
-                
-            }label: {
-                RoundedRectangle(cornerRadius: 16)
-                    .frame(width: 330, height: 50)
-                    .foregroundStyle(.white)
-                    .shadow(radius: 3)
-                    .overlay{
-                        HStack {
-                            Text("내 답변")
-                                .font(.bold(20))
-                                .foregroundStyle(.black)
-                            Spacer()
-                            Image("arrow")
-                                .resizable()
-                                .frame(width: 15, height: 18)
-                        }
-                        .padding(.horizontal, 20)
+                        .padding(16)
                     }
                     .padding(.bottom, 20)
-
-            }
-            
-            Button{
                 
-            }label: {
-                RoundedRectangle(cornerRadius: 16)
-                    .frame(width: 330, height: 50)
-                    .foregroundStyle(.white)
-                    .shadow(radius: 3)
-                    .overlay{
-                        HStack {
-                            Text("내 질문")
-                                .font(.bold(20))
-                                .foregroundStyle(.black)
-                            Spacer()
-                            Image("arrow")
-                                .resizable()
-                                .frame(width: 15, height: 18)
+                Button{
+                    activity = .Answer
+                    moveToActivity = true
+                }label: {
+                    RoundedRectangle(cornerRadius: 16)
+                        .frame(width: 330, height: 50)
+                        .foregroundStyle(.white)
+                        .shadow(radius: 3)
+                        .overlay{
+                            HStack {
+                                Text("내 답변")
+                                    .font(.bold(20))
+                                    .foregroundStyle(.black)
+                                Spacer()
+                                Image("arrow")
+                                    .resizable()
+                                    .frame(width: 15, height: 18)
+                            }
+                            .padding(.horizontal, 20)
                         }
-                        .padding(.horizontal, 20)
-                    }
-
-
+                        .padding(.bottom, 20)
+                }
+                
+                Button{
+                    activity = .Question
+                    moveToActivity = true
+                }label: {
+                    RoundedRectangle(cornerRadius: 16)
+                        .frame(width: 330, height: 50)
+                        .foregroundStyle(.white)
+                        .shadow(radius: 3)
+                        .overlay{
+                            HStack {
+                                Text("내 질문")
+                                    .font(.bold(20))
+                                    .foregroundStyle(.black)
+                                Spacer()
+                                Image("arrow")
+                                    .resizable()
+                                    .frame(width: 15, height: 18)
+                            }
+                            .padding(.horizontal, 20)
+                        }
+                }
             }
+            .navigationDestination(isPresented: $moveToActivity) {
+                UserActivityView(activity: activity, VM: VM)
+            }
+            Spacer()
+        }
+        .padding(.top, 24)
+        .task {
+            await VM.fetchUserInfo()
         }
     }
 }
+
+
 
 @ViewBuilder
 func InfoItem(_ title: String, _ value: String) -> some View{
@@ -130,5 +146,5 @@ func InfoItem(_ title: String, _ value: Int, _ trailing: String) -> some View{
 }
 
 #Preview {
-    ProfileView()
+    ProfileView(activity: .Answer)
 }

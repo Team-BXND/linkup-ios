@@ -41,7 +41,7 @@ extension ProfileAPI: TargetType {
     
     var headers: [String : String]? {
         let token = UserDefaults.standard.string(forKey: "access")
-        return ["Content-Type": "application/json", "Authorization": "Bearer \(token!)"]
+        return ["Content-Type": "application/json", "Authorization": "Bearer \(token ?? "")"]
     }
     
     

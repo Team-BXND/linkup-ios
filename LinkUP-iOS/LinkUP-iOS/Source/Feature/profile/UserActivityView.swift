@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct UserActivityView: View {
-    
+    var activity: Activity
+    @State var VM: ProfileViewModel
+    var page = 0
     var body: some View {
         VStack {
             RoundedRectangle(cornerRadius: 16)
@@ -18,15 +20,22 @@ struct UserActivityView: View {
                 .overlay {
                     VStack {
                         HStack {
-                            Text("내 답변")
+                            Text(activity.rawValue)
                                 .font(.bold(20))
                             Spacer()
                         }
                         .padding(.bottom, 20)
                         ScrollView(showsIndicators: false) {
-                                VStack{
-                                    ForEach(0..<20) { item in
-                                        ProfileAnsItem()
+                            LazyVStack {
+                                ForEach(VM.userActivity.data, id: \.id) { item in
+                                    ProfileItem(activity: activity, category: item.category, title: item.title, commentCount: item.commentCount!, answer: item.answer!, like: item.like!)
+                                        .onAppear {
+                                            if item == VM.userActivity.data.last && VM.userActivity.meta.hasNext == true {
+                                                Task {
+                                                    await VM.fetchUserActivity(type: activity)
+                                                }
+                                            }
+                                        }
                                 }
                             }
                         }
@@ -35,10 +44,9 @@ struct UserActivityView: View {
                     .padding(.top, 16)
                 }
         }
-        
     }
 }
 
 #Preview {
-    UserActivityView()
+    UserActivityView(activity: .Question, VM:ProfileViewModel())
 }

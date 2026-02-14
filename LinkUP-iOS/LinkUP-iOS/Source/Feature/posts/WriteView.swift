@@ -87,7 +87,7 @@ struct WriteView: View {
                     ActionSheet(
                         title: Text("카테고리 선택"),
                         buttons: Category.allCases.map { category in
-                            .default(Text(category.rawValue)) {
+                            .default(Text(category.displayName)) {
                                 selectedCategory = category
                             }
                         } + [.cancel(Text("취소"))]

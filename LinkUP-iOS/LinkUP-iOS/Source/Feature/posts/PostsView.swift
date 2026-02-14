@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PostsView: View {
     @StateObject private var viewModel = PostsViewModel.shared
+    @StateObject private var popularViewModel = PopularViewModel()
     @State private var showWriteView = false
     
     var body: some View {
@@ -51,6 +52,7 @@ struct PostsView: View {
                             Button(action: {
                                 viewModel.selectedTab = .hot
                                 viewModel.selectCategory(nil)
+                                popularViewModel.fetchPopular()
                             }) {
                                 Text("🔥가장 유용했던 글")
                                     .font(.bold(16))
@@ -102,7 +104,7 @@ struct PostsView: View {
                                         Button(action: {
                                             viewModel.selectCategory(category)
                                         }) {
-                                            Text(category.rawValue)
+                                            Text(category.displayName)
                                                 .font(.medium(12))
                                                 .padding(.horizontal, 16)
                                                 .padding(.vertical, 8)
@@ -122,19 +124,20 @@ struct PostsView: View {
                         
                         // 질문 목록
                         VStack(spacing: 12) {
-                            ForEach(viewModel.selectedTab == .list ? viewModel.filteredPosts : viewModel.posts) { post in
+                            ForEach(viewModel.selectedTab == .hot ? popularViewModel.populars:
+                                        (viewModel.selectedTab == .list ? viewModel.filteredPosts.map { convertPostToPopular($0) } : [])) { popularPost in
                                 NavigationLink(destination:
-                                    PostsDetailView(post: post)
+                                    PostsDetailView(post: convertPopularToPost(popularPost))
                                         .environmentObject(viewModel)
                                 ) {
                                     HStack(alignment: .top, spacing: 16) {
-                                        Text("\(post.id)")
+                                        Text("\(popularPost.id)")
                                             .font(.semibold(16))
                                             .foregroundColor(Color("MainColor"))
                                             .frame(width: 30)
                                         
                                         VStack(alignment: .leading, spacing: 12) {
-                                            Text(post.title)
+                                            Text(popularPost.title)
                                                 .font(.semibold(16))
                                                 .foregroundColor(.primary)
                                             
@@ -142,14 +145,14 @@ struct PostsView: View {
                                                 HStack(spacing: 4) {
                                                     Image(systemName: "hand.thumbsup")
                                                         .font(.regular(12))
-                                                    Text("유용해요 \(post.like)")
+                                                    Text("유용해요 \(popularPost.like)")
                                                         .font(.regular(12))
                                                 }
                                                 
                                                 HStack(spacing: 4) {
                                                     Image(systemName: "message.fill")
                                                         .font(.regular(12))
-                                                    Text("답변수 \(post.commentCount ?? 0)")
+                                                    Text("답변수 \(popularPost.commentCount ?? 0)")
                                                         .font(.regular(12))
                                                 }
                                             }
@@ -190,6 +193,41 @@ struct PostsView: View {
             WriteView()
                 .environmentObject(viewModel)
         }
+        .onAppear {
+            popularViewModel.fetchPopular()
+        }
+    }
+    
+    private func convertPostToPopular(_ post: Post) -> PopularDataInfo {
+        return PopularDataInfo(
+            id: post.id,
+            title: post.title,
+            author: post.author,
+            category: post.category,
+            like: post.like,
+            preview: post.preview,
+            isAccepted: post.isAccepted,
+            commentCount: post.commentCount,
+            createdAt: post.createdAt
+        )
+    }
+    
+    private func convertPopularToPost(_ popular: PopularDataInfo) -> Post {
+        return Post(
+            id: popular.id,
+            title: popular.title,
+            author: popular.author ?? "익명",
+            category: popular.category,
+            like: popular.like,
+            createdAt: popular.createdAt,
+            isAccepted: popular.isAccepted,
+            preview: popular.preview ?? "",
+            commentCount: popular.commentCount ?? 0,
+            content: popular.preview,
+            isLike: false,
+            isAuthor: false,
+            comments: []
+        )
     }
 }
 

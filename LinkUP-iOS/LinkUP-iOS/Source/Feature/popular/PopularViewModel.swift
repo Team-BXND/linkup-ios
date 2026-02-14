@@ -27,7 +27,7 @@ class PopularViewModel: ObservableObject {
                 preview: "useEffect를 사용하는데 렌더링이 계속 반복됩니다.",
                 isAccepted: true,
                 commentCount: 3,
-                createdAt: Date()
+                createdAt: ""
             ),
             PopularDataInfo(
                 id: 2,
@@ -38,7 +38,7 @@ class PopularViewModel: ObservableObject {
                 preview: "취업용 포트폴리오를 어떻게 구성해야 할지 고민입니다.",
                 isAccepted: false,
                 commentCount: 2,
-                createdAt: Date()
+                createdAt: ""
             ),
             PopularDataInfo(
                 id: 3,
@@ -49,7 +49,7 @@ class PopularViewModel: ObservableObject {
                 preview: "선배들과 자연스럽게 친해지고 싶어요.",
                 isAccepted: false,
                 commentCount: 1,
-                createdAt: Date()
+                createdAt: ""
             ),
             PopularDataInfo(
                 id: 4,
@@ -60,7 +60,7 @@ class PopularViewModel: ObservableObject {
                 preview: "아이디어부터 막막합니다.",
                 isAccepted: false,
                 commentCount: 0,
-                createdAt: Date()
+                createdAt: ""
             ),
             PopularDataInfo(
                 id: 5,
@@ -71,7 +71,7 @@ class PopularViewModel: ObservableObject {
                 preview: "아이디어부터 막막합니다.",
                 isAccepted: false,
                 commentCount: 0,
-                createdAt: Date()
+                createdAt: ""
             )
         ]
     }
@@ -87,7 +87,7 @@ class PopularViewModel: ObservableObject {
                 preview: "이번 주에 가장 많은 유용해요를 받은 질문입니다.",
                 isAccepted: true,
                 commentCount: 15,
-                createdAt: Date()
+                createdAt: ""
             ),
             PopularDataInfo(
                 id: 11,
@@ -98,7 +98,7 @@ class PopularViewModel: ObservableObject {
                 preview: "요즘 핫한 기술 스택이 궁금합니다.",
                 isAccepted: true,
                 commentCount: 12,
-                createdAt: Date()
+                createdAt: ""
             ),
             PopularDataInfo(
                 id: 12,
@@ -109,31 +109,39 @@ class PopularViewModel: ObservableObject {
                 preview: "신입생들을 위한 꿀팁 모음입니다.",
                 isAccepted: false,
                 commentCount: 8,
-                createdAt: Date()
+                createdAt: ""
             )
         ]
     }
     
-    func fetchPopular(page: Int = 1) {
+    func fetchPopular(page: Int = 0) {
         Task {
             do {
                 let response = try await service.fetchPopular(type: .popular, page: page)
-                self.populars = response.data
+                    
+                if !response.data.isEmpty {
+                    self.populars = response.data
+                    print("인기 질문 \(response.data.count)개 페치 성공")
+                }
             } catch {
                 print("인기 질문 페치 실패: \(error.localizedDescription)")
             }
         }
     }
-    
-    func fetchHotPopular(page: Int = 1) {
+
+    func fetchHotPopular(page: Int = 0) {
         Task {
             do {
                 let response = try await service.fetchPopular(type: .popularhot, page: page)
-                self.hotPopulars = response.data
+                    
+                if !response.data.isEmpty {
+                    self.hotPopulars = response.data
+                    print("핫 질문 \(response.data.count)개 페치 성공")
+                }
             } catch {
                 print("핫 질문 페치 실패: \(error.localizedDescription)")
             }
         }
     }
-    
+
 }

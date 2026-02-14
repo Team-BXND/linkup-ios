@@ -11,6 +11,7 @@ struct PopularView: View {
     @StateObject private var viewModel = PopularViewModel()
     @StateObject private var postsVM = PostsViewModel.shared
     @State private var selectedCategory: Category?
+    
     var body: some View {
         NavigationStack {
             ScrollView {

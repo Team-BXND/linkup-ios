@@ -11,7 +11,7 @@ struct RankingRowView: View {
     let user: RankingInfo
     var body: some View {
         HStack(spacing: 8) {
-            Text("\(user.rank)등")
+            Text("\(user.ranking)등")
                 .foregroundColor(Color(.main))
                 .font(.semibold(16))
 

@@ -13,4 +13,11 @@ struct AuthRequest: RequestProtocol {
     let password: String?
     let code: Int?
     
+    init(email: String, username: String?, password: String?, code: Int?) {
+        self.email = email
+        self.username = username
+        self.password = password
+        self.code = code
+    }
+    
 }

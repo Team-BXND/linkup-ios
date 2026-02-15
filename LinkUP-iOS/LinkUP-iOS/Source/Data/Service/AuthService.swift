@@ -18,37 +18,37 @@ class AuthService {
     func signup(userInfo: AuthRequest) async throws -> APIResponse {
         let response = try await provider.request(target: .signup(userInfo: userInfo))
         
-        return try response.filterSuccessfulStatusCodes().map(APIResponse.self)
+        
+        return try ErrorThrowing(response)
     }
     
     func signin(loginInfo: AuthRequest) async throws -> TokenResponse {
         let response = try await provider.request(target: .signin(loginInfo: loginInfo))
         
-        return try response.filterSuccessfulStatusCodes().map(TokenResponse.self)
+        return try ErrorThrowing(response)
     }
     
     func codesend(email: String) async throws -> APIResponse {
         let response = try await provider.request(target: .codesend(email: email))
         
-        
-        return try response.filterSuccessfulStatusCodes().map(APIResponse.self)
+        return try ErrorThrowing(response)
     }
     
     func codecheck(verifyInfo: AuthRequest) async throws -> APIResponse {
         let response = try await provider.request(target: .verify(verifyInfo: verifyInfo))
         
-        return try response.filterSuccessfulStatusCodes().map(APIResponse.self)
+        return try ErrorThrowing(response)
     }
     
     func pwchange(changeInfo: AuthRequest) async throws -> APIResponse {
         let response = try await provider.request(target: .change(change: changeInfo))
         
-        return try response.filterSuccessfulStatusCodes().map(APIResponse.self)
+        return try ErrorThrowing(response)
     }
     
     func refresh(refresh: String) async throws -> TokenResponse {
         let response = try await provider.request(target: .refresh(refresh: refresh))
         
-        return try response.filterSuccessfulStatusCodes().map(TokenResponse.self)
+        return try ErrorThrowing(response)
     }
 }

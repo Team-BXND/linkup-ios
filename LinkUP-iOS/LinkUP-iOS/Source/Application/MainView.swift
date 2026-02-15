@@ -15,7 +15,7 @@ struct MainView: View {
                         
                         Spacer()
                         
-                        NavigationLink(destination: LoginView()) {
+                        NavigationLink(destination: AuthView()) {
                             Text("TestLogin")
                                 .font(.system(size: 24))
                                 .foregroundColor(.blue)

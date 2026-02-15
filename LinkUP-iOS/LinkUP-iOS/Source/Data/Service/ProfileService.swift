@@ -10,16 +10,13 @@ import Foundation
 import Combine
 class ProfileService {
     static let shared = ProfileService()
-    private let provider = MoyaProvider<ProfileAPI>(plugins: [NetworkLoggerPlugin()])
+    private let provider = MoyaProvider<ProfileAPI>()
     
     private init() {}
     
-    func fetchUserInfo() async throws -> UserInfo {
+    func fetchUserInfo() async throws -> ProfileResponse {
         let response = try await provider.request(target: .userInfo)
-        
-        let filteredResponse = try response.filterSuccessfulStatusCodes()
-        
-        return try filteredResponse.map(UserInfo.self)
+        return try ErrorThrowing(response)
     }
     
     func fetchUserActivity(type: Activity, page: Int) async throws -> UserActivity {

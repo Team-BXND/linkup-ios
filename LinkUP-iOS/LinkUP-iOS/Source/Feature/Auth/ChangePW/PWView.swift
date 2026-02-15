@@ -9,6 +9,7 @@ import SwiftUI
 
 struct PWView: View {
     @State private var password = ""
+    @Binding var step: Int
     
     var body: some View {
         VStack(spacing: 0) {
@@ -22,29 +23,20 @@ struct PWView: View {
                 .padding(.bottom, 64)
             
             VStack(spacing: 12) {
-                TextField("새 비밀번호를 입력하세요", text: $password)
-                    .frame(height: 40)
-                    .padding(.horizontal, 16)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(14)
+                AuthTextField(placeholder: "새 비밀번호를 입력하세요", bindingText: $password)
                 
-                SecureField("새 비밀번호를 다시 입력하세요.", text: $password)
-                    .frame(height: 40)
-                    .padding(.horizontal, 16)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(14)
+                
+                AuthTextField(placeholder: "새 비밀번호를 다시 입력하세요", bindingText: $password, isSecure: true)
             }
             .padding(.horizontal, 32)
             .padding(.bottom, 32)
             
             
             VStack(spacing: 16) {
-                Button("비밀번호 변경") { }
-                    .font(.system(size: 20, weight: .medium))
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity, minHeight: 40)
-                    .background(Color("MainColor"))
-                    .cornerRadius(10)
+                AuthButton(shape: .fill, title: "비밀번호 변경") {
+                    
+                }
+
             }
             .padding(.horizontal, 32)
             Spacer()
@@ -53,5 +45,6 @@ struct PWView: View {
 }
 
 #Preview {
-    PWView()
+    @Previewable @State var step = 1
+    PWView(step: $step)
 }

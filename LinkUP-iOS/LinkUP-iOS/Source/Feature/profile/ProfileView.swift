@@ -26,7 +26,7 @@ struct ProfileView: View {
                                 .font(.bold(20))
                                 .padding(.bottom, 24)
                             
-                            InfoItem("닉네임", VM.userInfo.userName)
+                            InfoItem("닉네임", VM.userInfo.username)
                             
                             InfoItem("이메일", VM.userInfo.email)
                             

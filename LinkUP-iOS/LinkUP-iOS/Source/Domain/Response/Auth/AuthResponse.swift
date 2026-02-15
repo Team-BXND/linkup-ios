@@ -13,6 +13,6 @@ struct TokenResponse: ResponseProtocol {
 
 struct Token: ResponseProtocol {
     let accessToken: String?
-    let responesToken: String?
+    let refreshToken: String?
     let message: String?
 }

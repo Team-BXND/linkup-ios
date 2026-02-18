@@ -11,13 +11,21 @@
 import Foundation
 
 enum Category: String, CaseIterable, Identifiable, Codable {
-    case all = "전체"
-
-    case school = "학교생활"
-    case code = "코드"
-    case project = "프로젝트"
-    
+    case all = "all"
+    case school = "school"
+    case code = "code"
+    case project = "project"
+        
     var id: String { self.rawValue }
+        
+    var displayName: String {
+        switch self {
+        case .all: return "전체"
+        case .school: return "학교생활"
+        case .code: return "코드"
+        case .project: return "프로젝트"
+        }
+    }
     
     // API 요청용 값
     var apiValue: String {

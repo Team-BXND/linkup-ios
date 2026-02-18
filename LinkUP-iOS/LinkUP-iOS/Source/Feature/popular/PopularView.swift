@@ -11,6 +11,7 @@ struct PopularView: View {
     @StateObject private var viewModel = PopularViewModel()
     @StateObject private var postsVM = PostsViewModel.shared
     @State private var selectedCategory: Category?
+    
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -64,13 +65,13 @@ struct PopularView: View {
                 let post = Post(
                     id: popular.id,
                     title: popular.title,
-                    author: popular.author,
+                    author: popular.author ?? "익명",
                     category: popular.category,
                     like: popular.like,
                     createdAt: "\(popular.createdAt)",
                     isAccepted: popular.isAccepted,
-                    preview: popular.preview,
-                    commentCount: popular.commentCount
+                    preview: popular.preview ?? "",
+                    commentCount: popular.commentCount ?? 0
                 )
                 PostsDetailView(post: post)
                     .environmentObject(postsVM)

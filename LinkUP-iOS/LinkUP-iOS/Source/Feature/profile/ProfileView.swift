@@ -101,7 +101,7 @@ struct ProfileView: View {
                 }
             }
             .navigationDestination(isPresented: $moveToActivity) {
-                UserActivityView(activity: activity, VM: VM)
+                UserActivityView(activity: activity, VM: $VM)
             }
             Spacer()
         }

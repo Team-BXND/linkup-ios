@@ -31,7 +31,9 @@ struct EmailView: View {
             
             VStack(spacing: 16) {
                 AuthButton(shape: .fill, title: "인증번호 발송") {
-                    
+                    Task {
+                        
+                    }
                 }
                 
                 

@@ -11,8 +11,8 @@
 import Foundation
 
 enum Category: String, CaseIterable, Identifiable, Codable {
+    
     case all = "전체"
-
     case school = "학교생활"
     case code = "코드"
     case project = "프로젝트"

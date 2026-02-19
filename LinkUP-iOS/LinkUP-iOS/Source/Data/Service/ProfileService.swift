@@ -29,8 +29,8 @@ class ProfileService {
                 return try await provider.request(target: .myanswer(page: page))
             }
         }()
-
-        return try response.filterSuccessfulStatusCodes().map(UserActivity.self)
+        
+        return try ErrorThrowing(response)
         
     }
 }

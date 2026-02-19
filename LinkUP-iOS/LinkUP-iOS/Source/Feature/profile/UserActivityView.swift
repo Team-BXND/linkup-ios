@@ -9,7 +9,7 @@ import SwiftUI
 
 struct UserActivityView: View {
     var activity: Activity
-    @State var VM: ProfileViewModel
+    @Binding var VM: ProfileViewModel
     var page = 0
     var body: some View {
         RoundedRectangle(cornerRadius: 16)
@@ -48,6 +48,4 @@ struct UserActivityView: View {
     }
 }
 
-#Preview {
-    UserActivityView(activity: .Question, VM:ProfileViewModel())
-}
+

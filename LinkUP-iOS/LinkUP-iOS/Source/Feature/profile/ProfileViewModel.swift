@@ -20,7 +20,7 @@ class ProfileViewModel {
     func fetchUserInfo() async {
         do {
             let response = try await ProfileService.shared.fetchUserInfo()
-            print(userInfo)
+            userInfo = response.data
         } catch {
             print("에러: \(error.localizedDescription)")
         }

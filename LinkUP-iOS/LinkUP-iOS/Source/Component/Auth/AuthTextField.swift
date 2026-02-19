@@ -21,6 +21,7 @@ struct AuthTextField: View {
                     
                 } else {
                     TextField("", text: $bindingText, prompt: Text(placeholder).font(.semibold(16)))
+                        .textInputAutocapitalization(.never)
                         .foregroundStyle(.black)
                         .padding(.horizontal, 16)
                 }

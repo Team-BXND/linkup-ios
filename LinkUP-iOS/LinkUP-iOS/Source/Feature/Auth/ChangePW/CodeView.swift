@@ -7,8 +7,10 @@
 
 import SwiftUI
 
-struct ChangePWView: View {
+struct CodeView: View {
     @State private var code = ""
+    @EnvironmentObject var PWVM: PWViewModel
+    @EnvironmentObject var nav: AuthNavigation
     
     var body: some View {
         VStack(spacing: 0) {
@@ -22,30 +24,34 @@ struct ChangePWView: View {
                 .padding(.bottom, 64)
             
             VStack(spacing: 12) {
-                TextField("인증번호를 입력하세요", text: $code)
-                    .frame(height: 40)
-                    .padding(.horizontal, 16)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(14)
+                AuthTextField(placeholder: "인증번호를 입력하세요", bindingText: $code)
+                    .keyboardType(.numberPad)
             }
             .padding(.horizontal, 32)
             .padding(.bottom, 32)
             
-            
             VStack(spacing: 16) {
-                Button("인증번호 확인") { }
-                    .font(.system(size: 20, weight: .medium))
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity, minHeight: 40)
-                    .background(Color("MainColor"))
-                    .cornerRadius(10)
+                AuthButton(shape: .fill, title: "인증번호 확인") {
+                    Task {
+                        if code.isEmpty {
+                            PWVM.message = "인증번호를 입력하세요"
+                            PWVM.showalert = true
+                        } else {
+                            PWVM.changeinfo.code = Int(code)
+                            try await PWVM.codecheck()
+                        }
+                    }
+                }
             }
             .padding(.horizontal, 32)
             Spacer()
         }
+        .alert("오류", isPresented: $PWVM.showalert) {
+            
+        } message: {
+            Text(PWVM.message)
+        }
     }
 }
 
-#Preview {
-    ChangePWView()
-}
+

@@ -12,7 +12,7 @@ import Moya
 class DiscoveryService {
     
     static let shared = DiscoveryService()
-    private let provider = MoyaProvider<DiscoveryAPI>(plugins: [NetworkLoggerPlugin()])
+    private let provider = MoyaProvider<DiscoveryAPI>()
     
     private init() {}
     
@@ -34,17 +34,14 @@ class DiscoveryService {
             
         }()
         
-        return try response
-            .filterSuccessfulStatusCodes()
-            .map(PopularResponse.self)
+        return try ErrorThrowing(response)
     }
 
     func fetchRanking() async throws -> RankingResponse {
         
         let response = try await provider.request(target: .ranking)
+        print(response)
         
-        return try response
-            .filterSuccessfulStatusCodes()
-            .map(RankingResponse.self)
+        return try ErrorThrowing(response)
     }
 }

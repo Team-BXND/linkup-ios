@@ -9,8 +9,9 @@ import Foundation
 
 struct APIResponse: ResponseProtocol {
     let data: Message
+}
+
+struct Message: ResponseProtocol {
+    let message: String
     
-    struct Message: ResponseProtocol {
-        let message: String
-    }
 }

@@ -8,11 +8,11 @@
 import Foundation
 
 struct UserActivity: ResponseProtocol {
-    let data: [Info]
-    let meta: PageMeta
+    var data: [Info]
+    var meta: PageMeta
 }
 
-struct Info: ResponseProtocol {
+struct Info: ResponseProtocol, Equatable {
     // 공통
     let id: Int
     let title: String

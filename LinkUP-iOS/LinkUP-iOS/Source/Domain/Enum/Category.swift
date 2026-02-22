@@ -11,11 +11,13 @@
 import Foundation
 
 enum Category: String, CaseIterable, Identifiable, Codable {
-    case all = "all"
-    case school = "school"
-    case code = "code"
-    case project = "project"
+    
+    case all = "전체"
+    case school = "학교생활"
+    case code = "코드"
+    case project = "프로젝트"
         
+
     var id: String { self.rawValue }
         
     var displayName: String {

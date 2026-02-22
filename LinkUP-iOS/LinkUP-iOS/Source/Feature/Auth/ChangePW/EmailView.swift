@@ -9,6 +9,9 @@ import SwiftUI
 
 struct EmailView: View {
     @State private var email = ""
+    @EnvironmentObject var PWVM: PWViewModel
+    @EnvironmentObject var nav: AuthNavigation
+    
     
     var body: some View {
         VStack(spacing: 0) {
@@ -22,36 +25,33 @@ struct EmailView: View {
                 .padding(.bottom, 64)
             
             VStack(spacing: 12) {
-                TextField("이메일을 입력하세요.", text: $email)
-                    .frame(height: 40)
-                    .padding(.horizontal, 16)
-                    .background(Color(.systemGray6))
-                    .cornerRadius(14)
+                AuthTextField(placeholder: "이메일을 입력하세요", bindingText: $PWVM.changeinfo.email)
             }
             .padding(.horizontal, 32)
             .padding(.bottom, 32)
             
-            
             VStack(spacing: 16) {
-                Button("인증번호 발송") { }
-                    .font(.system(size: 20, weight: .medium))
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity, minHeight: 40)
-                    .background(Color("MainColor"))
-                    .cornerRadius(10)
-                
-                Button("로그인 하기") { }
-                    .font(.system(size: 20, weight: .medium))
-                    .foregroundColor(Color("MainColor"))
-                    .frame(maxWidth: .infinity, minHeight: 40)
-                    .overlay(RoundedRectangle(cornerRadius: 10).stroke(Color("MainColor"), lineWidth: 1))
+                AuthButton(shape: .fill, title: "인증번호 발송") {
+                    Task {
+                        try await PWVM.codesend()
+                    }
+                }
+                AuthButton(shape: .empty, title: "로그인하기") {
+                    nav.step = 0
+                }
             }
             .padding(.horizontal, 32)
             Spacer()
         }
+        .alert("오류", isPresented: $PWVM.showalert) {
+            
+        } message: {
+            Text(PWVM.message)
+        }
     }
 }
 
-#Preview {
-    EmailView()
-}
+//#Preview {
+//    @Previewable @State var step = 1
+//    EmailView()
+//}

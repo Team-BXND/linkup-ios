@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum Activity {
-    case Answer
-    case Question
+enum Activity: String {
+    case Answer = "내 답변"
+    case Question = "내 질문"
 }

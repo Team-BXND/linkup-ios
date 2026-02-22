@@ -7,4 +7,4 @@
 
 import Foundation
 
-let baseurl: String = "https://asdf/"
+let baseurl: String = "http://www.ddd.com"

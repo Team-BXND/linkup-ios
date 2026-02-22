@@ -33,7 +33,7 @@ struct RankingView: View {
                 .shadow(color: Color.black.opacity(0.06), radius: 1, x: 0, y: 4)
 
                 VStack(alignment: .leading, spacing: 24) {
-                    ForEach(viewModel.rowRankings, id: \.rank) { user in
+                    ForEach(viewModel.rowRankings, id: \.ranking) { user in
                         RankingRowView(user: user)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }

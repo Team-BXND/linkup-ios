@@ -14,5 +14,5 @@ struct RankingResponse: ResponseProtocol {
 struct RankingInfo: ResponseProtocol {
     let username: String
     let point: Int
-    let rank: Int
+    let ranking: Int
 }

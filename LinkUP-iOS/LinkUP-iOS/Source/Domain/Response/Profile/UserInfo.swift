@@ -8,8 +8,12 @@
 import Foundation
 
 struct UserInfo: ResponseProtocol {
-    let userName: String
+    let username: String
     let email: String
     let point: Int
     let ranking: Int
+}
+
+struct ProfileResponse: ResponseProtocol {
+    let data: UserInfo
 }

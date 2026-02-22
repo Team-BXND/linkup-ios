@@ -24,12 +24,14 @@ class DiscoveryService {
     func fetchPopular(type: PopularType, page: Int) async throws -> PopularResponse {
         
         let response = try await {
+            
             switch type {
                 case .popular:
                     return try await provider.request(target: .popular(page: page))
                 case .popularhot:
                     return try await provider.request(target: .popularhot(page: page))
             }
+            
         }()
         
         return try ErrorThrowing(response)
@@ -42,5 +44,4 @@ class DiscoveryService {
         
         return try ErrorThrowing(response)
     }
-    
 }

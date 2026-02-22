@@ -12,7 +12,7 @@ internal import Alamofire
 enum AuthAPI {
     case signup(userInfo: AuthRequest)
     case signin(loginInfo: AuthRequest)
-    case codesend(email: String)
+    case codesend(email: AuthRequest)
     case verify(verifyInfo: AuthRequest)
     case change(change: AuthRequest)
     case refresh(refresh: String)
@@ -47,7 +47,7 @@ extension AuthAPI: TargetType {
             
         case .signin(loginInfo: let Info): .requestJSONEncodable(Info)
             
-        case .codesend(email: let email): .requestParameters(parameters: ["email": email], encoding: requestEncoder)
+        case .codesend(email: let email): .requestJSONEncodable(email)
             
         case .verify(verifyInfo: let Info): .requestJSONEncodable(Info)
             

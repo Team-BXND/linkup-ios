@@ -9,7 +9,9 @@ import SwiftUI
 
 struct EmailView: View {
     @State private var email = ""
-    @Binding var step: Int
+    @EnvironmentObject var PWVM: PWViewModel
+    @EnvironmentObject var nav: AuthNavigation
+    
     
     var body: some View {
         VStack(spacing: 0) {
@@ -23,31 +25,33 @@ struct EmailView: View {
                 .padding(.bottom, 64)
             
             VStack(spacing: 12) {
-                AuthTextField(placeholder: "이메일을 입력하세요", bindingText: $email)
+                AuthTextField(placeholder: "이메일을 입력하세요", bindingText: $PWVM.changeinfo.email)
             }
             .padding(.horizontal, 32)
             .padding(.bottom, 32)
             
-            
             VStack(spacing: 16) {
                 AuthButton(shape: .fill, title: "인증번호 발송") {
                     Task {
-                        
+                        try await PWVM.codesend()
                     }
                 }
-                
-                
                 AuthButton(shape: .empty, title: "로그인하기") {
-                    step = 2
+                    nav.step = 0
                 }
             }
             .padding(.horizontal, 32)
             Spacer()
         }
+        .alert("오류", isPresented: $PWVM.showalert) {
+            
+        } message: {
+            Text(PWVM.message)
+        }
     }
 }
 
-#Preview {
-    @Previewable @State var step = 1
-    EmailView(step: $step)
-}
+//#Preview {
+//    @Previewable @State var step = 1
+//    EmailView()
+//}

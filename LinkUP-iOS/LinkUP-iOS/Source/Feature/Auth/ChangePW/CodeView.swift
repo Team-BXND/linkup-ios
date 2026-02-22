@@ -9,7 +9,8 @@ import SwiftUI
 
 struct CodeView: View {
     @State private var code = ""
-    @Binding var step: Int
+    @EnvironmentObject var PWVM: PWViewModel
+    @EnvironmentObject var nav: AuthNavigation
     
     var body: some View {
         VStack(spacing: 0) {
@@ -24,25 +25,33 @@ struct CodeView: View {
             
             VStack(spacing: 12) {
                 AuthTextField(placeholder: "인증번호를 입력하세요", bindingText: $code)
+                    .keyboardType(.numberPad)
             }
             .padding(.horizontal, 32)
             .padding(.bottom, 32)
             
-            
             VStack(spacing: 16) {
-                
-            
                 AuthButton(shape: .fill, title: "인증번호 확인") {
-                    
+                    Task {
+                        if code.isEmpty {
+                            PWVM.message = "인증번호를 입력하세요"
+                            PWVM.showalert = true
+                        } else {
+                            PWVM.changeinfo.code = Int(code)
+                            try await PWVM.codecheck()
+                        }
+                    }
                 }
             }
             .padding(.horizontal, 32)
             Spacer()
         }
+        .alert("오류", isPresented: $PWVM.showalert) {
+            
+        } message: {
+            Text(PWVM.message)
+        }
     }
 }
 
-#Preview {
-    @Previewable @State var yaho = 3
-    CodeView(step: $yaho)
-}
+

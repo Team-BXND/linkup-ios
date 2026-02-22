@@ -29,6 +29,7 @@ struct AuthTextField: View {
             .foregroundStyle(.white)
             .frame(width: 330, height: 36)
             .shadow(radius: 1, x: 0.3, y: 1)
+            .padding(0)
     }
 }
 

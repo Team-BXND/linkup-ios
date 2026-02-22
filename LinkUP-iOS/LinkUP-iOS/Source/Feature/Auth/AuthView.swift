@@ -1,35 +1,37 @@
-//
-//  AuthView.swift
-//  LinkUP-iOS
-//
-//  Created by maple on 2/12/26.
-//
-
-import Foundation
 import SwiftUI
+import Foundation
+
 
 struct AuthView: View {
-    @State var step: Int = 2
+    @StateObject var PWVM = PWViewModel()
+    @StateObject var AuthNav = AuthNavigation()
+    var showalert = false
     var body: some View {
-        switch step{
-        case 1:
-            SignupView(step: $step)
-        case 2:
-            LoginView(step: $step)
-        case 3:
-            EmailView(step: $step)
-        case 4:
-            CodeView(step: $step)
-        case 5:
-            PWView(step: $step)
-            
-        default:
-            LoginView(step: $step)
+        Group {
+            switch AuthNav.step {
+            case 0:
+                LoginView()
+            case 1:
+                SignupView()
+            case 2:
+                EmailView()
+            case 3:
+                CodeView()
+            case 4:
+                PWView()
+            default:
+                LoginView()
+            }
+        }
+        .environmentObject(AuthNav)
+        .environmentObject(PWVM)
+        .onAppear {
+            PWVM.nav = AuthNav
         }
     }
 }
 
-
 #Preview {
     AuthView()
 }
+

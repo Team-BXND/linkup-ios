@@ -21,6 +21,7 @@ class LoginViewModel : ObservableObject{
             print(response)
         } catch {
             isfailed = true
+            
             print(error.localizedDescription)
             
         }

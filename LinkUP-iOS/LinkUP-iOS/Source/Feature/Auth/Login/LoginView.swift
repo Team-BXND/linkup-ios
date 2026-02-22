@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LoginView: View {
     @StateObject var VM = LoginViewModel()
-    @Binding var step: Int
+    @EnvironmentObject private var nav: AuthNavigation
     
     
     var body: some View {
@@ -31,7 +31,7 @@ struct LoginView: View {
                 HStack {
                     Spacer()
                     Button("비밀번호를 잊으셨나요?") {
-                        step = 3
+                        nav.step = 2
                     }
                         .font(.system(size: 12, weight: .medium))
                         .foregroundColor(.gray)
@@ -50,7 +50,7 @@ struct LoginView: View {
                 }
                 
                 AuthButton(shape: .empty, title: "회원가입 하기") {
-                    step = 1
+                    nav.step = 1
                 }
             }
             .padding(.horizontal, 32)
@@ -61,5 +61,5 @@ struct LoginView: View {
 
 #Preview {
     @Previewable @State var yaho = 2
-    LoginView(step: $yaho)
+    LoginView()
 }

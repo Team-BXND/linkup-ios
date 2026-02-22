@@ -9,7 +9,7 @@ import Foundation
 import Moya
 
 class AuthService {
-    var provider = MoyaProvider<AuthAPI>()
+    var provider = MoyaProvider<AuthAPI>(plugins: [NetworkLoggerPlugin()])
     
     static var shared = AuthService()
     
@@ -28,8 +28,9 @@ class AuthService {
         return try ErrorThrowing(response)
     }
     
-    func codesend(email: String) async throws -> APIResponse {
+    func codesend(email: AuthRequest) async throws -> APIResponse {
         let response = try await provider.request(target: .codesend(email: email))
+        print(response)
         
         return try ErrorThrowing(response)
     }

@@ -26,19 +26,10 @@ struct PopularDataInfo: ResponseProtocol, Identifiable, Hashable {
 }
 
 struct PopularMetaInfo: ResponseProtocol {
-    let total: Int
-    let page: Int
+    let totalElements: Int
+    let currentPage: Int
     let pageSize: Int
     let totalPages: Int
     let hasNext: Bool
     let hasPrevious: Bool
-    
-    enum CodingKeys: String, CodingKey {
-        case total = "totalElements"
-        case page = "currentPage"
-        case pageSize
-        case totalPages
-        case hasNext
-        case hasPrevious
-    }
 }

@@ -10,6 +10,7 @@ class LoginViewModel : ObservableObject{
     @Published var loginInfo: LoginModel = LoginModel(email: "", password: "")
     @Published var isfailed = false
     @Published var errormessage = ""
+    var authManager: AuthManager?
     
     func login() async throws {
         let logindata = AuthRequest(email: loginInfo.email,username: nil, password: loginInfo.password, code: nil)
@@ -18,6 +19,7 @@ class LoginViewModel : ObservableObject{
             let response = try await AuthService.shared.signin(loginInfo: logindata)
             UserDefaults.standard.set(response.data.accessToken, forKey: "access")
             UserDefaults.standard.set(response.data.refreshToken, forKey: "refresh")
+            authManager?.isLogin = true
             print(response)
         } catch {
             isfailed = true

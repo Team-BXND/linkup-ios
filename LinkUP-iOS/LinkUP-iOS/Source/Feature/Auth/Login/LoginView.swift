@@ -10,6 +10,7 @@ import SwiftUI
 struct LoginView: View {
     @StateObject var VM = LoginViewModel()
     @EnvironmentObject private var nav: AuthNavigation
+    @EnvironmentObject var authManager: AuthManager
     
     
     var body: some View {
@@ -55,6 +56,9 @@ struct LoginView: View {
             }
             .padding(.horizontal, 32)
             Spacer()
+        }
+        .onAppear {
+            VM.authManager = authManager
         }
     }
 }

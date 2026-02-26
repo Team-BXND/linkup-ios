@@ -30,7 +30,7 @@ struct ProfileItem: View {
                             .frame(width: 60, height: 24)
                             .foregroundStyle(.sub.opacity(0.1))
                             .overlay {
-                                Text(category.rawValue)
+                                Text(category.displayName)
                                     .font(.regular(14))
                                     .foregroundStyle(.sub)
                             }

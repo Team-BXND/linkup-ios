@@ -10,6 +10,8 @@ struct PostsDetailView: View {
     let post: Post
 
     @State private var answerText = ""
+    @State private var showDeleteAlert = false
+    @State private var showEditView = false
     @FocusState private var isAnswerFocused: Bool
 
     var displayPost: Post {
@@ -18,11 +20,9 @@ struct PostsDetailView: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            // ── 스크롤 콘텐츠 ─────────────────────────────────────
             ScrollView {
                 VStack(alignment: .leading, spacing: 0) {
 
-                    // 헤더 (제목 + 좋아요)
                     HStack(alignment: .top, spacing: 12) {
                         Text("Q")
                             .font(.bold(36))
@@ -48,7 +48,6 @@ struct PostsDetailView: View {
                     .padding(.horizontal, 20)
                     .padding(.top, 20)
 
-                    // 메타 정보
                     HStack(spacing: 8) {
                         Text("\(displayPost.author) 님")
                         Text(displayPost.category.displayName)
@@ -60,7 +59,6 @@ struct PostsDetailView: View {
                     .padding(.horizontal, 20)
                     .padding(.top, 12)
 
-                    // 본문
                     Text(displayPost.content ?? "")
                         .font(.medium(12))
                         .foregroundColor(.primary)
@@ -68,9 +66,30 @@ struct PostsDetailView: View {
                         .padding(.horizontal, 20)
                         .padding(.top, 20)
 
+                    if displayPost.isAuthor == true {
+                        HStack {
+                            Spacer()
+                            Button("수정") { showEditView = true }
+                                .font(.medium(12))
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                                .background(Color(UIColor.systemGray5))
+                                .cornerRadius(8)
+
+                            Button("삭제") { showDeleteAlert = true }
+                                .font(.medium(12))
+                                .padding(.horizontal, 16)
+                                .padding(.vertical, 8)
+                                .background(Color.red.opacity(0.1))
+                                .foregroundColor(.red)
+                                .cornerRadius(8)
+                        }
+                        .padding(.horizontal, 20)
+                        .padding(.top, 12)
+                    }
+
                     Divider().padding(.vertical, 24).padding(.horizontal, 20)
 
-                    // 답변 섹션
                     VStack(alignment: .leading, spacing: 16) {
                         Text("\(displayPost.comments?.count ?? 0)개의 답변")
                             .font(.semibold(16))
@@ -89,6 +108,28 @@ struct PostsDetailView: View {
                                     Text("\(comment.author) 님의 답변")
                                         .font(.bold(14))
                                     Spacer()
+
+                                    if displayPost.isAuthor == true && !comment.isAccepted {
+                                        Button("채택하기") {
+                                            viewModel.acceptAnswer(postId: displayPost.id, commentId: comment.id)
+                                        }
+                                        .font(.medium(12))
+                                        .foregroundColor(.white)
+                                        .padding(.horizontal, 16)
+                                        .padding(.vertical, 8)
+                                        .background(Color("MainColor"))
+                                        .cornerRadius(8)
+                                    }
+
+                                    if comment.isAccepted {
+                                        Text("채택됨")
+                                            .font(.medium(12))
+                                            .foregroundColor(Color("MainColor"))
+                                            .padding(.horizontal, 16)
+                                            .padding(.vertical, 8)
+                                            .background(Color("MainColor").opacity(0.1))
+                                            .cornerRadius(8)
+                                    }
                                 }
                                 Text("작성일 : \(comment.createdAt)")
                                     .font(.medium(10))
@@ -112,65 +153,58 @@ struct PostsDetailView: View {
                 }
             }
 
-            // ── 답변 입력 영역 ────────────────────────────────────
-            VStack(spacing: 0) {
-                Divider()
+            if displayPost.isAuthor != true {
+                VStack(spacing: 0) {
+                    Divider()
 
-                // 서식 툴바 (입력창 위)
-                if isAnswerFocused {
-                    HStack(spacing: 16) {
-                        ForEach([("B", "bold"), ("I", "italic"), ("U", "underline"), ("S", "strikethrough")], id: \.0) { label, _ in
-                            Button(action: {}) {
-                                Text(label)
-                                    .font(label == "B" ? .system(size: 15, weight: .bold) :
-                                          label == "I" ? .system(size: 15).italic() :
-                                          .system(size: 15))
-                                    .underline(label == "U")
-                                    .strikethrough(label == "S")
-                                    .foregroundColor(.gray)
-                                    .frame(width: 28, height: 28)
+                    if isAnswerFocused {
+                        HStack(spacing: 16) {
+                            ForEach([("B", "bold"), ("I", "italic"), ("U", "underline"), ("S", "strikethrough")], id: \.0) { label, _ in
+                                Button(action: {}) {
+                                    Text(label)
+                                        .font(label == "B" ? .system(size: 15, weight: .bold) :
+                                              label == "I" ? .system(size: 15).italic() :
+                                              .system(size: 15))
+                                        .underline(label == "U")
+                                        .strikethrough(label == "S")
+                                        .foregroundColor(.gray)
+                                        .frame(width: 28, height: 28)
+                                }
                             }
+                            Button(action: {}) { Image(systemName: "link").foregroundColor(.gray) }
+                            Button(action: {}) { Image(systemName: "photo").foregroundColor(.gray) }
+                            Spacer()
                         }
-                        Button(action: {}) {
-                            Image(systemName: "link").foregroundColor(.gray)
+                        .padding(.horizontal, 16)
+                        .padding(.vertical, 8)
+                        .background(Color(UIColor.systemGray6))
+                    }
+
+                    HStack(spacing: 10) {
+                        TextField("따뜻한 댓글을 입력해주세요!", text: $answerText, axis: .vertical)
+                            .font(.medium(14))
+                            .lineLimit(1...4)
+                            .padding(.horizontal, 14)
+                            .padding(.vertical, 10)
+                            .background(Color(UIColor.systemGray6))
+                            .cornerRadius(20)
+                            .focused($isAnswerFocused)
+
+                        Button(action: { submitAnswer() }) {
+                            Image(systemName: "arrow.up")
+                                .font(.system(size: 14, weight: .bold))
+                                .foregroundColor(.white)
+                                .frame(width: 36, height: 36)
+                                .background(answerText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
+                                            ? Color(UIColor.systemGray4) : Color.blue)
+                                .clipShape(Circle())
                         }
-                        Button(action: {}) {
-                            Image(systemName: "photo").foregroundColor(.gray)
-                        }
-                        Spacer()
+                        .disabled(answerText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     }
                     .padding(.horizontal, 16)
-                    .padding(.vertical, 8)
-                    .background(Color(UIColor.systemGray6))
+                    .padding(.vertical, 12)
+                    .background(Color.white)
                 }
-
-                // 입력창 + 보내기 버튼
-                HStack(spacing: 10) {
-                    TextField("답변을 입력하세요.", text: $answerText, axis: .vertical)
-                        .font(.medium(14))
-                        .lineLimit(1...4)
-                        .padding(.horizontal, 14)
-                        .padding(.vertical, 10)
-                        .background(Color(UIColor.systemGray6))
-                        .cornerRadius(20)
-                        .focused($isAnswerFocused)
-
-                    // 보내기 버튼: 내용 없으면 흰색(비활성), 있으면 파란색
-                    Button(action: { submitAnswer() }) {
-                        Image(systemName: "arrow.up")
-                            .font(.system(size: 14, weight: .bold))
-                            .foregroundColor(.white)
-                            .frame(width: 36, height: 36)
-                            .background(answerText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                                        ? Color(UIColor.systemGray4)
-                                        : Color.blue)
-                            .clipShape(Circle())
-                    }
-                    .disabled(answerText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                .background(Color.white)
             }
         }
         .background(Color.white)
@@ -182,13 +216,24 @@ struct PostsDetailView: View {
                 }
             }
         }
+        .alert("게시글 삭제", isPresented: $showDeleteAlert) {
+            Button("삭제", role: .destructive) {
+                viewModel.deletePost(id: displayPost.id)
+                dismiss()
+            }
+            Button("취소", role: .cancel) {}
+        } message: {
+            Text("정말 삭제하시겠어요? 삭제 후 복구할 수 없어요.")
+        }
+        .fullScreenCover(isPresented: $showEditView) {
+            WriteView(editPost: displayPost).environmentObject(viewModel)
+        }
         .onAppear {
             viewModel.selectPost(post)
             viewModel.fetchPostDetail(id: post.id)
         }
     }
 
-    // MARK: - 답변 제출
     private func submitAnswer() {
         let trimmed = answerText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
@@ -204,7 +249,7 @@ struct PostsDetailView: View {
             id: 1, title: "샘플 질문", author: "작성자",
             category: .school, like: 5, createdAt: "2026-01-18",
             isAccepted: false, preview: "샘플", commentCount: 0,
-            content: "샘플 내용입니다.", isLike: false, isAuthor: false, comments: []
+            content: "샘플 내용입니다.", isLike: false, isAuthor: true, comments: []
         ))
         .environmentObject(PostsViewModel.shared)
     }

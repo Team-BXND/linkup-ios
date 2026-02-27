@@ -2,8 +2,8 @@
 //  PostsViewModel.swift
 //  LinkUP-iOS
 //
-import Combine
 import SwiftUI
+import Combine
 
 class PostsViewModel: ObservableObject {
     @Published var posts: [Post] = []
@@ -18,10 +18,7 @@ class PostsViewModel: ObservableObject {
     static let shared = PostsViewModel()
     private let service = PostService.shared
 
-    // 클라이언트 필터 제거 — 서버에서 카테고리별로 가져옴
-    var filteredPosts: [Post] { posts }
-
-    // MARK: - 게시글 목록 조회 (페이지네이션)
+    // MARK: - 게시글 목록 조회
     func fetchPosts(category: Category? = nil, page: Int = 1) {
         guard !isLoading else { return }
         Task {
@@ -30,10 +27,8 @@ class PostsViewModel: ObservableObject {
                 let response = try await service.fetchPosts(category: category, page: page)
                 await MainActor.run {
                     if page == 1 {
-                        // 첫 페이지: 초기화
                         self.posts = response.data.map { Post(from: $0) }
                     } else {
-                        // 추가 페이지: 뒤에 붙임
                         self.posts += response.data.map { Post(from: $0) }
                     }
                     self.currentPage = page
@@ -42,12 +37,10 @@ class PostsViewModel: ObservableObject {
                 }
             } catch {
                 await MainActor.run { self.isLoading = false }
-                print("❌ [fetchPosts 실패]: \(error.localizedDescription)")
             }
         }
     }
 
-    // 다음 페이지 로드
     func loadMorePosts() {
         guard hasNextPage, !isLoading else { return }
         fetchPosts(category: selectedCategory, page: currentPage + 1)
@@ -62,7 +55,7 @@ class PostsViewModel: ObservableObject {
                     self.selectedPost = Post(id: id, from: response.data)
                 }
             } catch {
-                print("❌ [fetchPostDetail 실패]: \(error.localizedDescription)")
+                print("❌ [fetchPostDetail 실패]: \(error)")
             }
         }
     }
@@ -78,9 +71,8 @@ class PostsViewModel: ObservableObject {
                     author: author
                 )
                 try await service.createPost(content: request)
-                print("✅ [createPost 성공]")
             } catch {
-                print("⚠️ [createPost 응답]: \(error.localizedDescription)")
+                print("❌ [createPost 실패]: \(error)")
             }
             await MainActor.run {
                 self.fetchPosts(category: self.selectedCategory, page: 1)
@@ -89,14 +81,14 @@ class PostsViewModel: ObservableObject {
     }
 
     // MARK: - 게시글 수정
-    func updatePost(id: Int, category: Category, title: String, content: String) {
+    func updatePost(id: Int, category: Category, title: String, content: String, author: String) {
         Task {
             do {
-                let request = UpdatePostRequest(category: category.rawValue, title: title, content: content)
+                let request = UpdatePostRequest(category: category.rawValue, title: title, content: content, author: author)
                 try await service.updatePost(id: id, content: request)
                 await MainActor.run { self.fetchPosts(category: self.selectedCategory, page: 1) }
             } catch {
-                print("❌ [updatePost 실패]: \(error.localizedDescription)")
+                print("❌ [updatePost 실패]: \(error)")
             }
         }
     }
@@ -108,7 +100,7 @@ class PostsViewModel: ObservableObject {
                 try await service.deletePost(id: id)
                 await MainActor.run { self.posts.removeAll { $0.id == id } }
             } catch {
-                print("❌ [deletePost 실패]: \(error.localizedDescription)")
+                print("❌ [deletePost 실패]: \(error)")
             }
         }
     }
@@ -119,7 +111,7 @@ class PostsViewModel: ObservableObject {
             do {
                 try await service.createAnswer(postId: postId, content: content)
             } catch {
-                print("⚠️ [createAnswer 응답]: \(error.localizedDescription)")
+                print("❌ [createAnswer 실패]: \(error)")
             }
             await MainActor.run { self.fetchPostDetail(id: postId) }
         }
@@ -131,7 +123,7 @@ class PostsViewModel: ObservableObject {
             do {
                 try await service.deleteAnswer(id: id)
             } catch {
-                print("❌ [deleteAnswer 실패]: \(error.localizedDescription)")
+                print("❌ [deleteAnswer 실패]: \(error)")
             }
         }
     }
@@ -143,7 +135,7 @@ class PostsViewModel: ObservableObject {
                 try await service.acceptAnswer(postId: postId, commentId: commentId)
                 await MainActor.run { self.fetchPostDetail(id: postId) }
             } catch {
-                print("❌ [acceptAnswer 실패]: \(error.localizedDescription)")
+                print("❌ [acceptAnswer 실패]: \(error)")
             }
         }
     }
@@ -154,7 +146,7 @@ class PostsViewModel: ObservableObject {
             do {
                 try await service.toggleLike(id: postId)
             } catch {
-                print("⚠️ [toggleLike 응답]: \(error.localizedDescription)")
+                print("❌ [toggleLike 실패]: \(error)")
             }
             await MainActor.run {
                 if let idx = self.posts.firstIndex(where: { $0.id == postId }) {
@@ -176,7 +168,6 @@ class PostsViewModel: ObservableObject {
 
     func selectCategory(_ category: Category?) {
         selectedCategory = category
-        // 카테고리 바꾸면 page 1부터 새로 로드
         fetchPosts(category: category, page: 1)
     }
 }

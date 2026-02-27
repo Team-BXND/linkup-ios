@@ -11,4 +11,5 @@ struct UpdatePostRequest: Codable {
     let category: String
     let title: String
     let content: String
+    let author: String
 }

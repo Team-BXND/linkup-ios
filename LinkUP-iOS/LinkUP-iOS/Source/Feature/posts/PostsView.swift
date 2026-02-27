@@ -15,13 +15,11 @@ struct PostsView: View {
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
 
-                        // 질문 프롬프트
                         Text("💬대소고에서 궁금한 점이 있다면?")
                             .font(.semibold(18))
                             .foregroundColor(.primary)
                             .padding(.leading, 32)
 
-                        // 카드 배너
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 12) {
                                 ForEach(["School", "Code", "Project"], id: \.self) { name in
@@ -35,7 +33,6 @@ struct PostsView: View {
                             .padding(.horizontal, 32)
                         }
 
-                        // 탭 버튼
                         HStack(spacing: 12) {
                             Button(action: {
                                 viewModel.selectedTab = .hot
@@ -67,11 +64,9 @@ struct PostsView: View {
                         }
                         .padding(.leading, 32)
 
-                        // 카테고리 필터 (질문 목록 탭만)
                         if viewModel.selectedTab == .list {
                             ScrollView(.horizontal, showsIndicators: false) {
                                 HStack(spacing: 12) {
-                                    // 전체
                                     Button(action: { viewModel.selectCategory(nil) }) {
                                         Text("전체")
                                             .font(.medium(12))
@@ -81,7 +76,6 @@ struct PostsView: View {
                                             .foregroundColor(.white)
                                             .cornerRadius(20)
                                     }
-                                    // 각 카테고리
                                     ForEach(Category.allCases) { category in
                                         Button(action: { viewModel.selectCategory(category) }) {
                                             Text(category.displayName)
@@ -98,7 +92,6 @@ struct PostsView: View {
                             }
                         }
 
-                        // ── 🔥 가장 유용했던 글 (상위 3개 + 순위 번호) ────────
                         if viewModel.selectedTab == .hot {
                             LazyVStack(spacing: 12) {
                                 ForEach(Array(popularViewModel.populars.prefix(3).enumerated()), id: \.element.id) { index, item in
@@ -107,7 +100,6 @@ struct PostsView: View {
                                             .environmentObject(viewModel)
                                     ) {
                                         HStack(alignment: .top, spacing: 16) {
-                                            // ✅ 순위 번호 (1, 2, 3)
                                             Text("\(index + 1)")
                                                 .font(.semibold(16))
                                                 .foregroundColor(Color("MainColor"))
@@ -121,16 +113,12 @@ struct PostsView: View {
 
                                                 HStack(spacing: 16) {
                                                     HStack(spacing: 4) {
-                                                        Image(systemName: "hand.thumbsup")
-                                                            .font(.system(size: 12))
-                                                        Text("유용해요 \(item.like)")
-                                                            .font(.system(size: 12))
+                                                        Image(systemName: "hand.thumbsup").font(.system(size: 12))
+                                                        Text("유용해요 \(item.like)").font(.system(size: 12))
                                                     }
                                                     HStack(spacing: 4) {
-                                                        Image(systemName: "message.fill")
-                                                            .font(.system(size: 12))
-                                                        Text("답변수 \(item.commentCount ?? 0)")
-                                                            .font(.system(size: 12))
+                                                        Image(systemName: "message.fill").font(.system(size: 12))
+                                                        Text("답변수 \(item.commentCount ?? 0)").font(.system(size: 12))
                                                     }
                                                 }
                                                 .foregroundColor(.gray)
@@ -149,7 +137,6 @@ struct PostsView: View {
                             .padding(.bottom, 100)
                         }
 
-                        // ── 🧐 질문 목록 (순위 번호 없음 + 무한 스크롤) ──────
                         if viewModel.selectedTab == .list {
                             LazyVStack(spacing: 12) {
                                 ForEach(viewModel.posts) { post in
@@ -158,7 +145,6 @@ struct PostsView: View {
                                             .environmentObject(viewModel)
                                     ) {
                                         HStack(alignment: .top, spacing: 16) {
-                                            // ✅ 질문 목록은 숫자 없음
                                             VStack(alignment: .leading, spacing: 8) {
                                                 Text(post.title)
                                                     .font(.semibold(16))
@@ -167,16 +153,12 @@ struct PostsView: View {
 
                                                 HStack(spacing: 16) {
                                                     HStack(spacing: 4) {
-                                                        Image(systemName: "hand.thumbsup")
-                                                            .font(.system(size: 12))
-                                                        Text("유용해요 \(post.like)")
-                                                            .font(.system(size: 12))
+                                                        Image(systemName: "hand.thumbsup").font(.system(size: 12))
+                                                        Text("유용해요 \(post.like)").font(.system(size: 12))
                                                     }
                                                     HStack(spacing: 4) {
-                                                        Image(systemName: "message.fill")
-                                                            .font(.system(size: 12))
-                                                        Text("답변수 \(post.commentCount)")
-                                                            .font(.system(size: 12))
+                                                        Image(systemName: "message.fill").font(.system(size: 12))
+                                                        Text("답변수 \(post.commentCount)").font(.system(size: 12))
                                                     }
                                                 }
                                                 .foregroundColor(.gray)
@@ -189,7 +171,6 @@ struct PostsView: View {
                                         .shadow(color: .black.opacity(0.05), radius: 3, y: 1)
                                     }
                                     .buttonStyle(PlainButtonStyle())
-                                    // ✅ 마지막 아이템 보이면 다음 페이지 로드
                                     .onAppear {
                                         if post.id == viewModel.posts.last?.id {
                                             viewModel.loadMorePosts()
@@ -197,10 +178,8 @@ struct PostsView: View {
                                     }
                                 }
 
-                                // 로딩 인디케이터
                                 if viewModel.isLoading {
-                                    ProgressView()
-                                        .padding(.vertical, 12)
+                                    ProgressView().padding(.vertical, 12)
                                 }
                             }
                             .padding(.horizontal, 32)
@@ -210,7 +189,6 @@ struct PostsView: View {
                     .padding(.top)
                 }
 
-                // 플로팅 버튼
                 Button(action: { showWriteView = true }) {
                     Image(systemName: "plus")
                         .font(.system(size: 24, weight: .medium))
@@ -229,12 +207,12 @@ struct PostsView: View {
             WriteView().environmentObject(viewModel)
         }
         .onAppear {
-            popularViewModel.fetchPopular()          // hot 탭용
-            viewModel.fetchPosts(page: 1)            // list 탭 미리 로드
+            print("🔵 [PostsView onAppear 호출]") // ✅ 추가
+            popularViewModel.fetchPopular()
+            viewModel.fetchPosts(page: 1)
         }
     }
 
-    // PopularDataInfo → Post 변환
     private func convertPopularToPost(_ popular: PopularDataInfo) -> Post {
         Post(
             id: popular.id,

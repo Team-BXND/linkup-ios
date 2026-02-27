@@ -20,16 +20,9 @@ class PostService {
         return try ErrorThrowing(response)
     }
 
-    // ✅ 반환 타입 Void — 서버 응답 구조 불일치 디코딩 에러 우회
     func createPost(content: CreatePostRequest) async throws {
         let response = try await provider.request(target: .posting(content: content))
-        print("📦 [createPost] statusCode: \(response.statusCode)")
-        if let json = String(data: response.data, encoding: .utf8) {
-            print("📦 [createPost JSON]: \(json)")
-        }
-        guard (200...299).contains(response.statusCode) else {
-            throw ErrorType.unknown
-        }
+        guard (200...299).contains(response.statusCode) else { throw ErrorType.unknown }
     }
 
     func updatePost(id: Int, content: UpdatePostRequest) async throws {
@@ -44,10 +37,6 @@ class PostService {
 
     func createAnswer(postId: Int, content: String) async throws {
         let response = try await provider.request(target: .answering(content: content, id: postId))
-        print("📦 [createAnswer] statusCode: \(response.statusCode)")
-        if let json = String(data: response.data, encoding: .utf8) {
-            print("📦 [createAnswer JSON]: \(json)")
-        }
         guard (200...299).contains(response.statusCode) else { throw ErrorType.unknown }
     }
 
@@ -61,10 +50,8 @@ class PostService {
         guard (200...299).contains(response.statusCode) else { throw ErrorType.unknown }
     }
 
-    // ✅ 반환 타입 Void — toggleLike 응답 구조 불일치 우회
     func toggleLike(id: Int) async throws {
         let response = try await provider.request(target: .like(id: id))
-        print("📦 [toggleLike] statusCode: \(response.statusCode)")
         guard (200...299).contains(response.statusCode) else { throw ErrorType.unknown }
     }
 }

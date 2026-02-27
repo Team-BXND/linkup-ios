@@ -2,15 +2,13 @@
 //  PostAPI.swift
 //  LinkUP-iOS
 //
-//  Created by maple on 1/23/26.
-//
 import Foundation
 import Moya
 internal import Alamofire
 
 enum PostAPI {
-    case getposting(category: Category, page: Int)
-    case getpost(id: Int) //query parameter
+    case getposting(category: Category?, page: Int)
+    case getpost(id: Int)
     case posting(content: CreatePostRequest)
     case patchposting(id: Int, content: UpdatePostRequest)
     case deleteposting(id: Int)
@@ -21,83 +19,82 @@ enum PostAPI {
 }
 
 extension PostAPI: TargetType {
-    
+
     var baseURL: URL {
         return URL(string: baseurl)!
     }
-    
+
     var path: String {
         switch self {
-            
-        case .getposting: "/posts"
-            
-        case .getpost(id: let id): "posts/\(id)"
-            
-        case .posting: "/posts"
-            
-        case .patchposting(id: let id): "/posts/\(id)"
-            
-        case .deleteposting(id: let id): "/posts/\(id)"
-            
-        case .answering(id: let id): "/posts/\(id)/answer"
-            
-        case .deleteanswer(id: let id): "/posts/\(id)/answer"
-            
-        case .acceptanswer(id: let id): "posts/\(id)/accept/ansid"
-            
-        case .like(id: let id): "posts/\(id)/like"
-            
+        case .getposting:                          return "/posts"
+        case .getpost(let id):                     return "/posts/\(id)"
+        case .posting:                             return "/posts"
+        case .patchposting(let id, _):             return "/posts/\(id)"
+        case .deleteposting(let id):               return "/posts/\(id)"
+        case .answering(_, let id):                return "/posts/\(id)/answer"
+        case .deleteanswer(let id):                return "/posts/\(id)/answer"
+        case .acceptanswer(let id, _):             return "/posts/\(id)/accept"
+        case .like(let id):                        return "/posts/\(id)/like"
         }
     }
-    
+
     var method: Moya.Method {
         switch self {
-        case .getposting, .getpost:
-            return .get
-            
-        case .patchposting:
-            return .patch
-            
-        case .deleteanswer, .deleteposting:
-            return .delete
-            
-        default:
-            return .post
-       
+        case .getposting, .getpost:   return .get
+        case .patchposting:           return .patch
+        case .deleteanswer, .deleteposting: return .delete
+        default:                      return .post
         }
     }
-    
+
     var task: Moya.Task {
         switch self {
-            
-        case .getposting(category: let category, page: let page):
-                .requestCompositeParameters(bodyParameters: ["category": category], bodyEncoding: requestEncoder, urlParameters: ["page": page])
-            
-        case .posting(content: let content):
-                .requestJSONEncodable(content)
-            
-        case  .patchposting(_, content: let content):
-                .requestJSONEncodable(content)
-            
-        case .answering(content: let content):
-                .requestParameters(parameters: ["content": content], encoding: requestEncoder)
-        case .acceptanswer(_, commentId: let commentId):
-                .requestParameters(parameters: ["commentId": commentId], encoding: requestEncoder)
+        case .getposting(let category, let page):
+            if let category = category {
+                return .requestParameters(
+                    parameters: ["category": category.rawValue, "page": page],
+                    encoding: URLEncoding.queryString
+                )
+            } else {
+                return .requestParameters(
+                    parameters: ["page": page],
+                    encoding: URLEncoding.queryString
+                )
+            }
+
+        case .posting(let content):
+            return .requestJSONEncodable(content)
+
+        case .patchposting(_, let content):
+            return .requestJSONEncodable(content)
+
+        case .answering(let content, _):
+            return .requestParameters(
+                parameters: ["content": content],
+                encoding: JSONEncoding.default
+            )
+
+        case .acceptanswer(_, let commentId):
+            return .requestParameters(
+                parameters: ["commentId": commentId],
+                encoding: JSONEncoding.default
+            )
+
         default:
-                .requestPlain
+            return .requestPlain
         }
     }
-    
-    var headers: [String : String]? {
-        let token = UserDefaults.standard.string(forKey: "access")
+
+    var headers: [String: String]? {
+        let token = UserDefaults.standard.string(forKey: "access") ?? ""
         switch self {
         case .getpost:
             return ["Content-Type": "application/json"]
-            
         default:
-            return ["Content-Type": "application/json", "Authorization": "Bearer \(token!)"]
+            return [
+                "Content-Type": "application/json",
+                "Authorization": "Bearer \(token)"
+            ]
         }
     }
-    
-    
 }

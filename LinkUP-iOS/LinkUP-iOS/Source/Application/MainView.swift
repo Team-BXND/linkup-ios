@@ -12,18 +12,10 @@ struct MainView: View {
                             .scaledToFit()
                             .frame(height: 40)
                             .padding(.leading, 13)
-                        
-                        Spacer()
-                        
-                        NavigationLink(destination: AuthView()) {
-                            Text("TestLogin")
-                                .font(.system(size: 24))
-                                .foregroundColor(.blue)
-                                .padding(.trailing, 13)
-                        }
                     }
-                    .frame(height: 40)
+                    .frame(maxWidth: .infinity, maxHeight: 40, alignment: .leading)
                     .padding(.top, 60)
+                    
                     
                     Tabbar()
                 }

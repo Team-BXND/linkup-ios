@@ -8,6 +8,7 @@ enum TabbarItem {
 
 struct Tabbar: View {
     @State private var selectedTab = 0
+    @EnvironmentObject private var login: AuthManager
     
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -32,12 +33,20 @@ struct Tabbar: View {
                 }
                 .tag(2)
             
-            ProfileView()
-                .tabItem {
-                    Image(systemName: "person.circle.fill")
-                    Text("Profile")
-                }
-                .tag(3)
+            if login.isLogin {
+                ProfileView()
+                    .tabItem {
+                        Image(systemName: "person.circle.fill")
+                        Text("Profile")
+                    }
+                    .tag(3)
+            } else {
+                MoveLoginView()
+                    .tabItem {
+                        Image(systemName: "person.circle.fill")
+                        Text("Profile")
+                    }
+            }
         }
         .tint(Color("MainColor"))
     }

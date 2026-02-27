@@ -9,7 +9,7 @@ import Foundation
 import Moya
 
 class AuthService {
-    var provider = MoyaProvider<AuthAPI>(plugins: [NetworkLoggerPlugin()])
+    var provider = MoyaProvider<AuthAPI>()
     
     static var shared = AuthService()
     

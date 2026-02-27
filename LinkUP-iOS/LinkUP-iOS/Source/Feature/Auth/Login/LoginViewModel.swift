@@ -29,4 +29,8 @@ class LoginViewModel : ObservableObject{
         }
     }
     
+    func logout() {
+        authManager?.isLogin = false
+    }
+    
 }

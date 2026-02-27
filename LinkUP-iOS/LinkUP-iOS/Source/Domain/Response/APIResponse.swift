@@ -8,10 +8,12 @@
 import Foundation
 
 struct APIResponse: ResponseProtocol {
+    
     let data: Message
 }
 
 struct Message: ResponseProtocol {
-    let message: String
+    let message: String?
+    let email: String?
     
 }

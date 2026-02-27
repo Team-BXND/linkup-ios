@@ -15,7 +15,7 @@ func ErrorThrowing<T: Decodable>(_ response: Response) throws -> T {
         return try response.map(T.self)
     } else {
         let errorData = try? response.map(APIResponse.self) // 이새끼가 범인임
-        let defaultData = APIResponse(data: Message(message: "알 수 없는 오류"))
+        let defaultData = APIResponse(data: Message(message: "알 수 없는 오류", email: "알 수 없는 오류"))
         
         let finalData = errorData ?? defaultData
         
@@ -38,13 +38,13 @@ func ErrorThrowing<T: Decodable>(_ response: Response) throws -> T {
 func ErrorMessage(error: ErrorType) -> String{
     switch error {
     case .invalidRequest(data: let data):
-        data.data.message
+        data.data.message!
     case .unauthorized(data: let data):
-        data.data.message
+        data.data.message!
     case .notfound(data: let data):
-        data.data.message
+        data.data.message!
     case .duplicatedUser(data: let data):
-        data.data.message
+        data.data.message!
     case .serverError:
         "서버 오류"
     case .unknown:

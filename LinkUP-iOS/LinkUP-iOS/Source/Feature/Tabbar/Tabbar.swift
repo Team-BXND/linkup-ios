@@ -7,7 +7,6 @@ struct Tabbar: View {
     var body: some View {
         TabView(selection: $tabManager.selectedTab) {
             PopularView()
-                .environmentObject(tabManager)
                 .tabItem {
                     Image(systemName: "house.fill")
                     Text("Home")

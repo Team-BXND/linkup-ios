@@ -68,9 +68,10 @@ struct ProfileInfoView: View {
                                     .font(.bold(20))
                                     .foregroundStyle(.black)
                                 Spacer()
-                                Image("arrow")
+                                Image(systemName: "arrow.right")
                                     .resizable()
                                     .frame(width: 15, height: 18)
+                                    .foregroundStyle(.main)
                             }
                             .padding(.horizontal, 20)
                         }
@@ -91,9 +92,10 @@ struct ProfileInfoView: View {
                                     .font(.bold(20))
                                     .foregroundStyle(.black)
                                 Spacer()
-                                Image("arrow")
+                                Image(systemName: "arrow.right")
                                     .resizable()
                                     .frame(width: 15, height: 18)
+                                    .foregroundStyle(.main)
                             }
                             .padding(.horizontal, 20)
                         }

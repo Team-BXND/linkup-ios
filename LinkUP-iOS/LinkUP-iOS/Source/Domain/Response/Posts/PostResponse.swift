@@ -30,12 +30,5 @@ struct PageMeta: ResponseProtocol {
     let hasNext: Bool
     let hasPrevious: Bool
 
-    enum CodingKeys: String, CodingKey {
-        case total       = "totalElements"
-        case page        = "currentPage"
-        case pageSize
-        case totalPages
-        case hasNext
-        case hasPrevious
-    }
+    
 }

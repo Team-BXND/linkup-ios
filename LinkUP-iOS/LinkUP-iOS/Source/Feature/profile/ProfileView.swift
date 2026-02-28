@@ -1,150 +1,32 @@
 //
-//  RallyInfoView.swift
-//  dodum-iOS
+//  ProfileView.swift
+//  LinkUP-iOS
 //
-//  Created by maple on 9/27/25.
+//  Created by maple on 2/28/26.
 //
 
+import Foundation
 import SwiftUI
 
-struct ProfileView: View {
-    @State private var moveToActivity: Bool = false
+enum ProfileStatus {
+    case info, activity
+}
+
+struct ProfileView : View {
+    @State var status: ProfileStatus = .info
     @State var activity: Activity = .Question
-    @State var VM = ProfileViewModel()
-        
-    
+    @StateObject var VM = ProfileViewModel()
+
     var body: some View {
-        NavigationStack {
-            VStack{
-                RoundedRectangle(cornerRadius: 16)
-                    .frame(width: 330, height: 370)
-                    .foregroundStyle(.white)
-                    .shadow(radius: 3)
-                    .overlay(alignment: .topLeading){
-                        VStack(alignment: .leading) {
-                            Text("프로필")
-                                .font(.bold(20))
-                                .padding(.bottom, 24)
-                            
-                            InfoItem("닉네임", VM.userInfo.username)
-                            
-                            InfoItem("이메일", VM.userInfo.email)
-                            
-                            InfoItem("답변자 순위", VM.userInfo.ranking, "위")
-                            
-                            InfoItem("포인트", 1000, " P")
-                                .padding(.bottom, 32)
-                            
-                            HStack{
-                                Spacer()
-                                Button{
-                                    
-                                } label: {
-                                    ZStack{
-                                        RoundedRectangle(cornerRadius: 10)
-                                            .frame(width: 110, height: 35)
-                                            .foregroundStyle(.sub)
-                                        Text("로그아웃")
-                                            .font(.medium(16))
-                                            .foregroundStyle(.white)
-                                    }
-                                }
-                            }
-                        }
-                        .padding(16)
-                    }
-                    .padding(.bottom, 20)
-                
-                Button{
-                    activity = .Answer
-                    moveToActivity = true
-                }label: {
-                    RoundedRectangle(cornerRadius: 16)
-                        .frame(width: 330, height: 50)
-                        .foregroundStyle(.white)
-                        .shadow(radius: 3)
-                        .overlay{
-                            HStack {
-                                Text("내 답변")
-                                    .font(.bold(20))
-                                    .foregroundStyle(.black)
-                                Spacer()
-                                Image("arrow")
-                                    .resizable()
-                                    .frame(width: 15, height: 18)
-                            }
-                            .padding(.horizontal, 20)
-                        }
-                        .padding(.bottom, 20)
-                }
-                
-                Button{
-                    activity = .Question
-                    moveToActivity = true
-                }label: {
-                    RoundedRectangle(cornerRadius: 16)
-                        .frame(width: 330, height: 50)
-                        .foregroundStyle(.white)
-                        .shadow(radius: 3)
-                        .overlay{
-                            HStack {
-                                Text("내 질문")
-                                    .font(.bold(20))
-                                    .foregroundStyle(.black)
-                                Spacer()
-                                Image("arrow")
-                                    .resizable()
-                                    .frame(width: 15, height: 18)
-                            }
-                            .padding(.horizontal, 20)
-                        }
-                }
+        Group {
+            switch status {
+            case .info:
+                ProfileInfoView(status: $status, activity: $activity)
+            case .activity:
+                UserActivityView(activity: $activity, status: $status)
             }
-            .navigationDestination(isPresented: $moveToActivity) {
-                UserActivityView(activity: activity, VM: $VM)
-            }
-            Spacer()
         }
-        .padding(.top, 24)
-        .task {
-            await VM.fetchUserInfo()
-        }
+        .environmentObject(VM)
     }
 }
 
-
-
-@ViewBuilder
-func InfoItem(_ title: String, _ value: String) -> some View{
-    VStack(alignment: .leading){
-        Text(title)
-            .font(.medium(18))
-            .foregroundStyle(.gray)
-            .padding(.bottom, 0)
-        
-        Text(value)
-            .font(.semibold(16))
-        
-    }
-    .padding(.bottom, 8)
-}
-
-@ViewBuilder
-func InfoItem(_ title: String, _ value: Int, _ trailing: String) -> some View{
-    VStack(alignment: .leading){
-        Text(title)
-            .font(.medium(18))
-            .foregroundStyle(.gray)
-            .padding(.top, 0)
-        
-        Text("\(value)\(trailing)")
-            .font(.semibold(16))
-            .foregroundStyle(.main)
-        
-    }
-    .padding(.bottom, 8)
-}
-
-#Preview {
-    ProfileView(activity: .Answer)
-}

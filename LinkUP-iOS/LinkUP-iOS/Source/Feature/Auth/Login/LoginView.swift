@@ -11,6 +11,7 @@ struct LoginView: View {
     @StateObject var VM = LoginViewModel()
     @EnvironmentObject private var nav: AuthNavigation
     @EnvironmentObject var authManager: AuthManager
+    @Environment(\.dismiss) var dismiss
     
     
     var body: some View {
@@ -47,6 +48,9 @@ struct LoginView: View {
                 AuthButton(shape: .fill, title: "로그인") {
                     Task {
                         try await VM.login()
+                        if authManager.isLogin == true {
+                            dismiss()
+                        }
                     }
                 }
                 

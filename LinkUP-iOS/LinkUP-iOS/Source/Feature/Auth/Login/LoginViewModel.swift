@@ -29,4 +29,11 @@ class LoginViewModel : ObservableObject{
         }
     }
     
+    func logout() {
+        authManager?.isLogin = false
+        UserDefaults.standard.removeObject(forKey: "access")
+        UserDefaults.standard.removeObject(forKey: "refresh")
+        
+    }
+    
 }

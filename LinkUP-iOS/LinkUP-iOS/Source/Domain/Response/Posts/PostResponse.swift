@@ -2,17 +2,15 @@
 //  PostResponse.swift
 //  LinkUP-iOS
 //
-//  Created by maple on 1/25/26.
-//
-
 import Foundation
 
-struct PostsResponse: Codable {
+struct PostsResponse: ResponseProtocol {
+    let status: Int
     let data: [PostListItem]
     let meta: PageMeta
 }
 
-struct PostListItem: Codable {
+struct PostListItem: ResponseProtocol {
     let id: Int
     let title: String
     let author: String
@@ -24,11 +22,20 @@ struct PostListItem: Codable {
     let createdAt: String
 }
 
-struct PageMeta: Codable {
+struct PageMeta: ResponseProtocol {
     let total: Int
     let page: Int
     let pageSize: Int
     let totalPages: Int
     let hasNext: Bool
     let hasPrevious: Bool
+
+    enum CodingKeys: String, CodingKey {
+        case total       = "totalElements"
+        case page        = "currentPage"
+        case pageSize
+        case totalPages
+        case hasNext
+        case hasPrevious
+    }
 }

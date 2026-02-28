@@ -2,15 +2,10 @@
 //  ErrorThrowing.swift
 //  LinkUP-iOS
 //
-//  Created by maple on 2/15/26.
-//
-
 import Foundation
 import Moya
 
-
 func ErrorThrowing<T: Decodable>(_ response: Response) throws -> T {
-    
     if (200...299).contains(response.statusCode) {
         return try response.map(T.self)
     } else {
@@ -32,10 +27,24 @@ func ErrorThrowing<T: Decodable>(_ response: Response) throws -> T {
         default: throw ErrorType.unknown
         }
     }
+
+    if let json = String(data: response.data, encoding: .utf8) {
+        print("❌ [서버 에러] statusCode: \(response.statusCode), JSON: \(json)")
+    }
+
+    let errorData = (try? response.map(APIResponse.self)) ?? APIResponse(data: Message(message: "알 수 없는 오류"))
+
+    switch response.statusCode {
+    case 400: throw ErrorType.invalidRequest(data: errorData)
+    case 401: throw ErrorType.unauthorized(data: errorData)
+    case 404: throw ErrorType.notfound(data: errorData)
+    case 409: throw ErrorType.duplicatedUser(data: errorData)
+    case 500: throw ErrorType.serverError
+    default:  throw ErrorType.unknown
+    }
 }
 
-
-func ErrorMessage(error: ErrorType) -> String{
+func ErrorMessage(error: ErrorType) -> String {
     switch error {
     case .invalidRequest(data: let data):
         data.data.message!
@@ -50,5 +59,4 @@ func ErrorMessage(error: ErrorType) -> String{
     case .unknown:
         "알 수 없는 오류"
     }
-    
 }

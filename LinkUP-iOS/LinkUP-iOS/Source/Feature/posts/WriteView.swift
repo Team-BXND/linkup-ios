@@ -2,14 +2,14 @@
 //  WriteView.swift
 //  LinkUP-iOS
 //
-//  Created by chanwoo on 1/12/26.
-//
-
 import SwiftUI
 
 struct WriteView: View {
     @EnvironmentObject var viewModel: PostsViewModel
     @Environment(\.dismiss) var dismiss
+
+    var editPost: Post? = nil
+
     @State private var title = ""
     @State private var nickname = ""
     @State private var selectedCategory: Category? = nil
@@ -18,35 +18,38 @@ struct WriteView: View {
     @State private var showAlert = false
     @State private var alertMessage = ""
     @FocusState private var focusedField: Field?
-    
-    enum Field {
-        case title, nickname, content
-    }
-    
+
+    enum Field { case title, nickname, content }
+
+    private var isEditMode: Bool { editPost != nil }
+
     var body: some View {
         VStack(spacing: 0) {
-            // 헤더 (뒤로가기 버튼)
+
+            // ── 헤더 ──────────────────────────────────────────────
             HStack {
                 Button(action: { dismiss() }) {
                     Image(systemName: "xmark")
-                        .font(.bold(20))
+                        .font(.system(size: 18, weight: .medium))
                         .foregroundColor(.primary)
                 }
-                
                 Spacer()
+                if isEditMode {
+                    Text("글 수정").font(.semibold(16))
+                    Spacer()
+                    Image(systemName: "xmark").foregroundColor(.clear)
+                }
             }
-            .padding(.horizontal, 32)
+            .padding(.horizontal, 24)
             .padding(.top, 20)
-            .padding(.bottom, 12)
-            
-            // 입력 필드 그룹
-            VStack(spacing: 12) {
-                // 제목 입력
+            .padding(.bottom, 16)
+
+            // ── 입력 필드 ──────────────────────────────────────────
+            VStack(spacing: 10) {
                 HStack(spacing: 12) {
                     Text("Q")
                         .font(.bold(28))
                         .foregroundColor(Color("MainColor"))
-                    
                     TextField("제목을 입력하세요.", text: $title)
                         .font(.semibold(16))
                         .focused($focusedField, equals: .title)
@@ -54,47 +57,37 @@ struct WriteView: View {
                 .padding()
                 .background(Color(UIColor.systemGray6))
                 .cornerRadius(12)
-                
-                // 닉네임 입력
+
                 TextField("닉네임을 입력하세요.", text: $nickname)
                     .font(.semibold(16))
-                    .foregroundColor(.gray)
+                    .foregroundColor(isEditMode ? .gray.opacity(0.5) : .gray)
                     .padding()
                     .background(Color(UIColor.systemGray6))
                     .cornerRadius(12)
                     .focused($focusedField, equals: .nickname)
-                
-                // 카테고리 선택
-                Button(action: {
-                    showCategoryPicker = true
-                }) {
+                    .disabled(isEditMode)
+
+                Button(action: { showCategoryPicker = true }) {
                     HStack {
-                        Text(selectedCategory?.rawValue ?? "카테고리를 선택하세요.")
+                        Text(selectedCategory?.displayName ?? "카테고리를 선택하세요.")
                             .font(.semibold(16))
                             .foregroundColor(selectedCategory == nil ? .gray : .primary)
-                        
                         Spacer()
-                        
                         Image(systemName: "chevron.down")
-                            .font(.semibold(14))
+                            .font(.system(size: 14, weight: .semibold))
                             .foregroundColor(.gray)
                     }
                     .padding()
                     .background(Color(UIColor.systemGray6))
                     .cornerRadius(12)
                 }
-                .actionSheet(isPresented: $showCategoryPicker) {
-                    ActionSheet(
-                        title: Text("카테고리 선택"),
-                        buttons: Category.allCases.map { category in
-                            .default(Text(category.displayName)) {
-                                selectedCategory = category
-                            }
-                        } + [.cancel(Text("취소"))]
-                    )
+                .confirmationDialog("카테고리 선택", isPresented: $showCategoryPicker) {
+                    ForEach(Category.allCases) { category in
+                        Button(category.displayName) { selectedCategory = category }
+                    }
+                    Button("취소", role: .cancel) {}
                 }
-                
-                // 본문 입력
+
                 ZStack(alignment: .topLeading) {
                     if content.isEmpty {
                         Text("본문을 입력하세요")
@@ -103,7 +96,6 @@ struct WriteView: View {
                             .padding(.horizontal, 20)
                             .padding(.top, 20)
                     }
-                    
                     TextEditor(text: $content)
                         .font(.medium(16))
                         .padding(.horizontal, 12)
@@ -115,131 +107,68 @@ struct WriteView: View {
                 .background(Color(UIColor.systemGray6))
                 .cornerRadius(12)
             }
-            .padding(.horizontal, 32)
-            
-            Spacer()
-            
-            // 하단 툴바 및 버튼
-            HStack(spacing: 12) {
-                ForEach(["B", "I", "U", "S"], id: \.self) { label in
-                    Button(action: {}) {
-                        Text(label)
-                            .font(.bold(18))
-                            .foregroundColor(.gray)
-                            .modifier(TextStyleModifier(style: label))
+            .padding(.horizontal, 24)
+
+            // ── 하단 툴바 ─────────────────────────────────────────
+            VStack(spacing: 0) {
+                Divider()
+                HStack(spacing: 16) {
+                    Button(action: {}) { Text("B").bold().foregroundColor(.gray).frame(width: 28, height: 28) }
+                    Button(action: {}) { Text("I").italic().foregroundColor(.gray).frame(width: 28, height: 28) }
+                    Button(action: {}) { Text("S").strikethrough().foregroundColor(.gray).frame(width: 28, height: 28) }
+                    Button(action: {}) { Image(systemName: "link").foregroundColor(.gray) }
+                    Button(action: {}) { Image(systemName: "photo").foregroundColor(.gray) }
+                    Spacer()
+                    Button(action: { isEditMode ? submitEdit() : submitPost() }) {
+                        Text(isEditMode ? "수정하기" : "질문하기")
+                            .font(.system(size: 15, weight: .semibold))
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 24)
+                            .padding(.vertical, 12)
+                            .background(Color("MainColor"))
+                            .cornerRadius(12)
                     }
                 }
-                
-                Button(action: {}) {
-                    Image(systemName: "link")
-                        .foregroundColor(.gray)
-                }
-                
-                Button(action: {}) {
-                    Image(systemName: "photo")
-                        .foregroundColor(.gray)
-                }
-                
-                Spacer()
-                
-                // 질문하기 버튼
-                Button(action: {
-                    // 빈 필드 검증
-                    if title.isEmpty {
-                        alertMessage = "제목을 입력해주세요."
-                        showAlert = true
-                        return
-                    }
-                    
-                    if nickname.isEmpty {
-                        alertMessage = "닉네임을 입력해주세요."
-                        showAlert = true
-                        return
-                    }
-                    
-                    guard let category = selectedCategory else {
-                        alertMessage = "카테고리를 선택해주세요."
-                        showAlert = true
-                        return
-                    }
-                    
-                    if content.isEmpty {
-                        alertMessage = "본문을 입력해주세요."
-                        showAlert = true
-                        return
-                    }
-                    
-                    // 새 게시글 추가
-                    viewModel.addPost(
-                        title: title,
-                        author: nickname,
-                        category: category,
-                        content: content
-                    )
-                    
-                    dismiss()
-                }) {
-                    Text("질문하기")
-                        .font(.medium(14))
-                        .foregroundColor(.white)
-                        .padding(.horizontal, 32)
-                        .padding(.vertical, 12)
-                        .background(Color("MainColor"))
-                        .cornerRadius(10)
-                }
+                .padding(.horizontal, 20)
+                .padding(.vertical, 14)
+                .background(Color.white)
             }
-            .padding(.horizontal, 32)
-            .padding(.vertical, 16)
-            .background(Color.white)
         }
         .background(Color.white)
         .alert("입력 확인", isPresented: $showAlert) {
-            Button("확인", role: .cancel) { }
+            Button("확인", role: .cancel) {}
         } message: {
             Text(alertMessage)
         }
-    }
-}
-
-// 텍스트 스타일 수정자
-struct TextStyleModifier: ViewModifier {
-    let style: String
-    
-    func body(content: Content) -> some View {
-        switch style {
-        case "I":
-            content.italic()
-        case "U":
-            content.underline()
-        case "S":
-            content.strikethrough()
-        default:
-            content
+        .onAppear {
+            if let post = editPost {
+                title = post.title
+                nickname = post.author
+                selectedCategory = post.category
+                content = post.content ?? ""
+            }
         }
+    }
+
+    private func submitPost() {
+        guard !title.isEmpty else { alertMessage = "제목을 입력해주세요."; showAlert = true; return }
+        guard !nickname.isEmpty else { alertMessage = "닉네임을 입력해주세요."; showAlert = true; return }
+        guard let category = selectedCategory else { alertMessage = "카테고리를 선택해주세요."; showAlert = true; return }
+        guard !content.isEmpty else { alertMessage = "본문을 입력해주세요."; showAlert = true; return }
+        viewModel.createPost(category: category, title: title, content: content, author: nickname)
+        dismiss()
+    }
+
+    private func submitEdit() {
+        guard !title.isEmpty else { alertMessage = "제목을 입력해주세요."; showAlert = true; return }
+        guard let category = selectedCategory else { alertMessage = "카테고리를 선택해주세요."; showAlert = true; return }
+        guard !content.isEmpty else { alertMessage = "본문을 입력해주세요."; showAlert = true; return }
+        guard let post = editPost else { return }
+        viewModel.updatePost(id: post.id, category: category, title: title, content: content, author: nickname)
+        dismiss()
     }
 }
 
 #Preview {
-    WriteView()
-        .environmentObject(PostsViewModel())
+    WriteView().environmentObject(PostsViewModel.shared)
 }
-// MARK: - Temporary shim to satisfy WriteView call site
-// Remove or replace this when your real implementation exists in PostsViewModel.
-extension PostsViewModel {
-    @MainActor
-    func addPost(title: String, author: String, category: Category, content: String) {
-        // If your PostsViewModel already has an API to add posts, replace this body
-        // to forward to it. This shim prevents dynamicMember/binding errors.
-        NotificationCenter.default.post(
-            name: Notification.Name("PostsViewModel.addPost"),
-            object: nil,
-            userInfo: [
-                "title": title,
-                "author": author,
-                "category": category.rawValue,
-                "content": content
-            ]
-        )
-    }
-}
-

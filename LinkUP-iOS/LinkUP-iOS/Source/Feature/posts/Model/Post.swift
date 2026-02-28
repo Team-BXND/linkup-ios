@@ -12,7 +12,7 @@ struct Post: Identifiable {
     let title: String
     let author: String
     let category: Category
-    let like: Int
+    var like: Int
     let createdAt: String
     let isAccepted: Bool
     let preview: String

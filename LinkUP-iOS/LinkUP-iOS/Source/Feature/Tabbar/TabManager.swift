@@ -8,6 +8,13 @@
 import SwiftUI
 import Combine
 
+enum TabPage: Int {
+    case popular = 0
+    case posts = 1
+    case ranking = 2
+    case profile = 3
+}
+
 class TabManager: ObservableObject {
-    @Published var selectedTab: Int = 0
+    @Published var selectedTab: TabPage = .popular
 }

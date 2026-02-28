@@ -89,7 +89,7 @@ struct CategoryNavButton: View {
         Button(action: {
             PostsViewModel.shared.selectedTab = .list
             PostsViewModel.shared.selectCategory(category)
-            tabManager.selectedTab = 1
+            tabManager.selectedTab = .posts
         }) {
             Image(imageName)
         }

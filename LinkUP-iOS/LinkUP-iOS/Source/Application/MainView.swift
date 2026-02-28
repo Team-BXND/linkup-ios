@@ -1,27 +1,33 @@
 import SwiftUI
 
 struct MainView: View {
+    @StateObject private var tabManager = TabManager()
     
     var body: some View {
         NavigationStack {
             ZStack {
                 VStack(spacing: 0) {
                     HStack {
-                        Image("Logo")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(height: 40)
-                            .padding(.leading, 13)
+                        Button(action: {
+                            tabManager.selectedTab = .popular
+                        }) {
+                            Image("Logo")
+                                .resizable()
+                                .scaledToFit()
+                                .frame(height: 40)
+                                .padding(.leading, 13)
+                        }
+                        .buttonStyle(PlainButtonStyle())
                     }
                     .frame(maxWidth: .infinity, maxHeight: 40, alignment: .leading)
                     .padding(.top, 60)
                     
-                    
-                    Tabbar()
+                    Tabbar(tabManager: tabManager)
                 }
                 .ignoresSafeArea()
             }
         }
+        .environmentObject(tabManager)
     }
 }
 

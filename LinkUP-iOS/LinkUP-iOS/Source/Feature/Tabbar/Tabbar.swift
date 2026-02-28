@@ -1,13 +1,7 @@
 import SwiftUI
 
-enum TabbarItem {
-    case popular
-    case posts
-    case ranking
-}
-
 struct Tabbar: View {
-    @StateObject private var tabManager = TabManager()
+    @ObservedObject var tabManager: TabManager
     @EnvironmentObject private var login: AuthManager
     
     var body: some View {
@@ -18,21 +12,21 @@ struct Tabbar: View {
                     Image(systemName: "house.fill")
                     Text("Home")
                 }
-                .tag(0)
+                .tag(TabPage.popular)
             
             PostsView()
                 .tabItem {
                     Image(systemName: "questionmark.circle")
                     Text("Q & A")
                 }
-                .tag(1)
+                .tag(TabPage.posts)
             
             RankingView()
                 .tabItem {
                     Image(systemName: "chart.bar.xaxis")
                     Text("Ranking")
                 }
-                .tag(2)
+                .tag(TabPage.ranking)
             
             if login.isLogin {
                 ProfileView()
@@ -40,7 +34,7 @@ struct Tabbar: View {
                         Image(systemName: "person.circle.fill")
                         Text("Profile")
                     }
-                    .tag(3)
+                    .tag(TabPage.profile)
             } else {
                 MoveLoginView()
                     .tabItem {
@@ -54,5 +48,5 @@ struct Tabbar: View {
 }
 
 #Preview {
-    Tabbar()
+    Tabbar(tabManager: TabManager())
 }

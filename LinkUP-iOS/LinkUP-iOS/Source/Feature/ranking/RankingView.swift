@@ -33,8 +33,9 @@ struct RankingView: View {
                 .shadow(color: Color.black.opacity(0.06), radius: 1, x: 0, y: 4)
 
                 VStack(alignment: .leading, spacing: 24) {
-                    ForEach(viewModel.rowRankings, id: \.ranking) { user in
-                        RankingRowView(user: user)
+                    ForEach(0..<viewModel.rowRankings.count, id: \.self) { index in
+                        let user = viewModel.rowRankings[index]
+                        RankingRowView(user: user, rankIndex: index + 4)
                             .frame(maxWidth: .infinity, alignment: .leading)
                     }
                 }

@@ -9,9 +9,11 @@ import SwiftUI
 
 struct RankingRowView: View {
     let user: RankingInfo
+    let rankIndex: Int
+    
     var body: some View {
         HStack(spacing: 8) {
-            Text("\(user.ranking)등")
+            Text("\(rankIndex)등")
                 .foregroundColor(Color(.main))
                 .font(.semibold(16))
 

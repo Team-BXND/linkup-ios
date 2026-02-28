@@ -32,7 +32,7 @@ func ErrorThrowing<T: Decodable>(_ response: Response) throws -> T {
         print("❌ [서버 에러] statusCode: \(response.statusCode), JSON: \(json)")
     }
 
-    let errorData = (try? response.map(APIResponse.self)) ?? APIResponse(data: Message(message: "알 수 없는 오류"))
+    let errorData = (try? response.map(APIResponse.self)) ?? APIResponse(data: Message(message: "알 수 없는 오류", email: ""))
 
     switch response.statusCode {
     case 400: throw ErrorType.invalidRequest(data: errorData)

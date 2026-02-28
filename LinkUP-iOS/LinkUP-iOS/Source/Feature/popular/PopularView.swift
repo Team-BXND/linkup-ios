@@ -58,9 +58,6 @@ struct PopularView: View {
                     Spacer(minLength: 0)
                 }
             }
-            .navigationDestination(item: $selectedCategory) { category in
-                PostsView()
-            }
             .navigationDestination(for: PopularDataInfo.self) { popular in
                 let post = Post(
                     id: popular.id,
@@ -84,6 +81,7 @@ struct PopularView: View {
 }
 
 struct CategoryNavButton: View {
+    @EnvironmentObject var tabManager: TabManager
     @Binding var selectedCategory: Category?
     let category: Category
     let imageName: String
@@ -91,7 +89,7 @@ struct CategoryNavButton: View {
         Button(action: {
             PostsViewModel.shared.selectedTab = .list
             PostsViewModel.shared.selectCategory(category)
-            selectedCategory = category
+            tabManager.selectedTab = .posts
         }) {
             Image(imageName)
         }

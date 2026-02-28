@@ -17,7 +17,7 @@ class RankingViewModel: ObservableObject {
     private var sortedRankings: [RankingInfo] {
         rankings.data.sorted {
             if $0.point == $1.point {
-                return $0.ranking < $1.ranking
+                return $0.username < $1.username
             }
             return $0.point > $1.point
         }

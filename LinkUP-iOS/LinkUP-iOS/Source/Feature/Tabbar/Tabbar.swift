@@ -7,12 +7,13 @@ enum TabbarItem {
 }
 
 struct Tabbar: View {
-    @State private var selectedTab = 0
+    @StateObject private var tabManager = TabManager()
     @EnvironmentObject private var login: AuthManager
     
     var body: some View {
-        TabView(selection: $selectedTab) {
+        TabView(selection: $tabManager.selectedTab) {
             PopularView()
+                .environmentObject(tabManager)
                 .tabItem {
                     Image(systemName: "house.fill")
                     Text("Home")

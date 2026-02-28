@@ -49,7 +49,7 @@ struct WriteView: View {
                 HStack(spacing: 12) {
                     Text("Q")
                         .font(.bold(28))
-                        .foregroundColor(Color("MainColor"))
+                        .foregroundColor(.main)
                     TextField("제목을 입력하세요.", text: $title)
                         .font(.semibold(16))
                         .focused($focusedField, equals: .title)
@@ -125,7 +125,7 @@ struct WriteView: View {
                             .foregroundColor(.white)
                             .padding(.horizontal, 24)
                             .padding(.vertical, 12)
-                            .background(Color("MainColor"))
+                            .background(.main)
                             .cornerRadius(12)
                     }
                 }

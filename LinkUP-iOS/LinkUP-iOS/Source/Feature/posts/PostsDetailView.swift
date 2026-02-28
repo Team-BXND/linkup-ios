@@ -26,7 +26,7 @@ struct PostsDetailView: View {
                     HStack(alignment: .top, spacing: 12) {
                         Text("Q")
                             .font(.bold(36))
-                            .foregroundColor(Color("MainColor"))
+                            .foregroundColor(.main)
                             .frame(width: 50, height: 50)
 
                         Text(displayPost.title)
@@ -41,7 +41,7 @@ struct PostsDetailView: View {
                                 .font(.semibold(12))
                                 .foregroundColor(.white)
                                 .frame(width: 24, height: 24)
-                                .background((displayPost.isLike ?? false) ? Color("MainColor") : Color.gray)
+                                .background((displayPost.isLike ?? false) ? .main : Color.gray)
                                 .clipShape(Circle())
                         }
                     }
@@ -124,10 +124,10 @@ struct PostsDetailView: View {
                                     if comment.isAccepted {
                                         Text("채택됨")
                                             .font(.medium(12))
-                                            .foregroundColor(Color("MainColor"))
+                                            .foregroundColor(.main)
                                             .padding(.horizontal, 16)
                                             .padding(.vertical, 8)
-                                            .background(Color("MainColor").opacity(0.1))
+                                            .background(Color.main).opacity(0.1)
                                             .cornerRadius(8)
                                     }
                                 }
@@ -144,7 +144,7 @@ struct PostsDetailView: View {
                             .cornerRadius(12)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 12)
-                                    .stroke(comment.isAccepted ? Color("MainColor") : Color.clear, lineWidth: 2)
+                                    .stroke(comment.isAccepted ? .main : Color.clear, lineWidth: 2)
                             )
                             .padding(.horizontal, 20)
                         }

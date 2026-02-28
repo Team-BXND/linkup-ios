@@ -48,7 +48,7 @@ struct Tabbar: View {
                     }
             }
         }
-        .tint(Color("MainColor"))
+        .tint(.main)
     }
 }
 

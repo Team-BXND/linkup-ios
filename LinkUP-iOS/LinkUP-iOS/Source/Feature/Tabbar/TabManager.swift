@@ -9,10 +9,10 @@ import SwiftUI
 import Combine
 
 enum TabPage: Int {
-    case popular = 0
-    case posts = 1
-    case ranking = 2
-    case profile = 3
+    case popular
+    case posts
+    case ranking
+    case profile
 }
 
 class TabManager: ObservableObject {

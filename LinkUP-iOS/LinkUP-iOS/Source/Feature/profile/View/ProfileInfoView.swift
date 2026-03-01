@@ -37,6 +37,7 @@ struct ProfileInfoView: View {
                             HStack{
                                 Spacer()
                                 Button{
+                                    VM.logout()
                                     
                                 } label: {
                                     ZStack{

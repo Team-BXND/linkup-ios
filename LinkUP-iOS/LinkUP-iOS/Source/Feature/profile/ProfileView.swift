@@ -16,6 +16,7 @@ struct ProfileView : View {
     @State var status: ProfileStatus = .info
     @State var activity: Activity = .Question
     @StateObject var VM = ProfileViewModel()
+    @EnvironmentObject var authmanager: AuthManager
 
     var body: some View {
         Group {
@@ -27,6 +28,9 @@ struct ProfileView : View {
             }
         }
         .environmentObject(VM)
+        .onAppear {
+            VM.authmanager = authmanager
+        }
     }
 }
 

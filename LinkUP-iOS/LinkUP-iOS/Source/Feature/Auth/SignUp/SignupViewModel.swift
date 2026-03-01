@@ -18,7 +18,7 @@ class SignupViewModel: ObservableObject {
         let signupdata = AuthRequest(email: inputinfo.email, username: inputinfo.username, password: inputinfo.password, code: nil)
         
         do {
-            let response = try await AuthService.shared.signup(userInfo: signupdata)
+            try await AuthService.shared.signup(userInfo: signupdata)
             // 201 성공 처리
             await MainActor.run {
                 self.successMessage = "회원가입이 완료되었습니다."

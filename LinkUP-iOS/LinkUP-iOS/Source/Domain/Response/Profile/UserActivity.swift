@@ -12,7 +12,7 @@ struct UserActivity: ResponseProtocol {
     var meta: PageMeta
 }
 
-struct Info: ResponseProtocol, Equatable {
+struct Info: ResponseProtocol, Equatable, Hashable {
     // 공통
     let id: Int
     let title: String

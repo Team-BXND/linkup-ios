@@ -82,3 +82,6 @@ struct ProfileItem: View {
     }
 }
 
+#Preview {
+    ProfileItem()
+}

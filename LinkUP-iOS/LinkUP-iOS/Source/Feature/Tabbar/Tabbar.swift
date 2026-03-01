@@ -40,6 +40,7 @@ struct Tabbar: View {
                         Image(systemName: "person.circle.fill")
                         Text("Profile")
                     }
+                    .tag(TabPage.profile)
             }
         }
         .tint(.main)

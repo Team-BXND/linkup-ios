@@ -6,6 +6,7 @@ class ProfileViewModel: ObservableObject {
     @Published var userInfo: UserInfo = UserInfo(username: "", email: "", point: 1, ranking: 1)
     @Published var userActivity: UserActivity = UserActivity(data: [], meta: PageMeta(total: 0, page: 0, pageSize: 0, totalPages: 0, hasNext: true, hasPrevious: true))
     
+    var authmanager: AuthManager?
     
     
     // ✅ 중복 API 호출 방지용 플래그
@@ -54,4 +55,8 @@ class ProfileViewModel: ObservableObject {
         
         isLoading = false
     }
+    
+    func logout() {
+            AuthManager.shared.logout()
+        }
 }

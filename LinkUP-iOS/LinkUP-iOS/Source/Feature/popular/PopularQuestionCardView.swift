@@ -25,7 +25,7 @@ struct PopularQuestionCardView: View {
                         .font(.regular(12))
                         .foregroundColor(.gray)
                     
-                    Text("\(popular.author) 님")
+                    Text("\(popular.author ?? "") 님")
                         .font(.regular(12))
                         .foregroundColor(.gray)
                     

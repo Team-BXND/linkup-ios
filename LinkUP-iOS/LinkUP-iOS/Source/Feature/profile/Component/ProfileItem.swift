@@ -14,74 +14,78 @@ struct ProfileItem: View {
     var commentCount: Int = 10
     var answer: String = "답변 내용"
     var like: Int = 7
+    @Binding var ispresent: Bool
     
+    var function : () -> Void
     
     var body: some View {
-        RoundedRectangle(cornerRadius: 12)
-            .stroke(Color.gray.opacity(0.3), lineWidth: 1)
-            .foregroundStyle(.white)
-            
-            .frame(width: 300, height: 60)
-            
-            .overlay(alignment: .leading) {
-                VStack(alignment: .leading) {
-                    HStack {
-                        RoundedRectangle(cornerRadius: 16)
-                            .frame(width: 60, height: 24)
-                            .foregroundStyle(.sub.opacity(0.1))
-                            .overlay {
-                                Text(category.displayName)
-                                    .font(.regular(14))
-                                    .foregroundStyle(.sub)
+        Button {
+            function()
+            ispresent = true
+        } label: {
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.gray.opacity(0.3), lineWidth: 1)
+                .foregroundStyle(.white)
+                .frame(width: 300, height: 60)
+                .overlay(alignment: .leading) {
+                    VStack(alignment: .leading) {
+                        HStack {
+                            RoundedRectangle(cornerRadius: 16)
+                                .frame(width: 60, height: 24)
+                                .foregroundStyle(.sub.opacity(0.1))
+                                .overlay {
+                                    Text(category.displayName)
+                                        .font(.regular(14))
+                                        .foregroundStyle(.sub)
+                                }
+                            switch activity {
+                            case .Answer:
+                                Text(answer)
+                                    .font(.semibold(16))
+                                    .foregroundStyle(.black)
+                            case .Question:
+                                Text(title)
+                                    .font(.semibold(16))
+                                    .foregroundStyle(.black)
                             }
+                            
+                            
+                        }
+                        .padding(0)
                         switch activity {
                         case .Answer:
-                            Text(answer)
-                                .font(.semibold(16))
+                            HStack {
+                                Image("대충 이미지")
+                                Text(title)
+                                    .font(.regular(14))
+                                    .foregroundStyle(.gray)
+                                    .padding(.trailing,16)
+                            }
                         case .Question:
-                            Text(title)
-                                .font(.semibold(16))
+                            HStack {
+                                Image("like")
+                                    .resizable()
+                                    .frame(width: 12, height: 12)
+                                Text("유용해요 \(commentCount)")
+                                    .font(.regular(12))
+                                    .foregroundStyle(.gray)
+                                    .padding(.trailing,16)
+                                
+                                
+                                Image("answer")
+                                    .resizable()
+                                    .frame(width: 12, height: 12)
+                                Text("답변 수 \(like)")
+                                    .font(.regular(12))
+                                    .foregroundStyle(.gray)
+                            }
                         }
                         
-                        
                     }
-                    .padding(0)
-                    switch activity {
-                    case .Answer:
-                        HStack {
-                            Image("대충 이미지")
-                            Text(title)
-                                .font(.regular(14))
-                                .foregroundStyle(.gray)
-                                .padding(.trailing,16)
-                        }
-                    case .Question:
-                        HStack {
-                            Image("like")
-                                .resizable()
-                                .frame(width: 12, height: 12)
-                            Text("유용해요 \(commentCount)")
-                                .font(.regular(12))
-                                .foregroundStyle(.gray)
-                                .padding(.trailing,16)
-
-                            
-                            Image("answer")
-                                .resizable()
-                                .frame(width: 12, height: 12)
-                            Text("답변 수 \(like)")
-                                .font(.regular(12))
-                                .foregroundStyle(.gray)
-                        }
-                    }
-                    
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
                 }
-                .padding(.horizontal, 12)
-                .padding(.vertical, 8)
-            }
+        }
     }
 }
 
-#Preview {
-    ProfileItem()
-}

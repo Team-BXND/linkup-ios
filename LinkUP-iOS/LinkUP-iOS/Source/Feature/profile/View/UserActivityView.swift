@@ -11,41 +11,44 @@ struct UserActivityView: View {
     @Binding var activity: Activity
     @Binding var status: ProfileStatus
     @EnvironmentObject var VM: ProfileViewModel
-    var page = 0
+    @State var ispresent = false
+
     var body: some View {
-        VStack {
-            HStack {
-                Button {
-                    status = .info
-                } label: {
-                    Circle()
-                        .foregroundStyle(.white)
-                        .frame(width: 40, height: 40)
-                        .shadow(radius: 2)
-                        .overlay {
-                            Image(systemName: "chevron.left")
-                                .foregroundStyle(.black)
-                        }
+        NavigationStack {
+            VStack {
+                HStack {
+                    Button {
+                        status = .info
+                    } label: {
+                        Circle()
+                            .foregroundStyle(.white)
+                            .frame(width: 40, height: 40)
+                            .shadow(radius: 2)
+                            .overlay {
+                                Image(systemName: "chevron.left")
+                                    .foregroundStyle(.black)
+                            }
+                    }
+                    Spacer()
                 }
-                Spacer()
-            }
-            RoundedRectangle(cornerRadius: 16)
-                .frame(width: 330, height: 660)
-                .foregroundStyle(.white)
-                .shadow(radius: 3)
-                .overlay {
-                    VStack {
-                        HStack {
-                            Text(activity.rawValue)
-                                .font(.bold(20))
-                                .padding(.leading, 16)
-                            Spacer()
-                        }
-                        .padding(.bottom, 20)
-                        ScrollView(showsIndicators: false) {
-                            LazyVStack {
-                                ForEach(VM.userActivity.data, id: \.id) { item in
-                                    ProfileItem(activity: activity, category: item.category, title: item.title, commentCount: item.commentCount ?? 0, answer: item.answer ?? "", like: item.like ?? 0)
+                RoundedRectangle(cornerRadius: 16)
+                    .frame(width: 330, height: 660)
+                    .foregroundStyle(.white)
+                    .shadow(radius: 3)
+                    .overlay {
+                        VStack {
+                            HStack {
+                                Text(activity.rawValue)
+                                    .font(.bold(20))
+                                    .padding(.leading, 16)
+                                Spacer()
+                            }
+                            .padding(.bottom, 20)
+                            ScrollView(showsIndicators: false) {
+                                LazyVStack {
+                                    ForEach(VM.userActivity.data, id: \.self) { item in
+                                        ProfileItem(activity: activity, category: item.category, title: item.title, commentCount: item.commentCount ?? 0, answer: item.answer ?? "", like: item.like ?? 0, ispresent: $ispresent) {
+                                        }
                                         .onAppear {
                                             if item == VM.userActivity.data.last && VM.userActivity.meta.hasNext == true {
                                                 Task {
@@ -53,19 +56,19 @@ struct UserActivityView: View {
                                                 }
                                             }
                                         }
+                                        
+                                    }
                                 }
+                                
                             }
-                            
-                        }
-                    }.padding(.top, 16)
-                }
+                        }.padding(.top, 16)
+                    }
             }
-        .onAppear {
-            VM.userActivity.data = []
-        }
-        .padding(.horizontal,16)
-        .task {
-            await VM.fetchUserActivity(type: activity)
+            .task(id: activity) {
+                // isRefresh: true를 넘겨서 무조건 첫 페이지(0)부터 다시 불러오도록 강제합니다.
+                await VM.fetchUserActivity(type: activity, isRefresh: true)
+            }
+            .padding(.horizontal,16)
         }
     }
 }

@@ -9,9 +9,10 @@ import SwiftUI
 
 struct PopularQuestionCardView: View {
     let popular: PopularDataInfo
+    let rank: Int
     var body: some View {
         HStack(alignment: .center, spacing: 20) {
-            Text("\(popular.id)")
+            Text("\(rank)")
                 .font(.semibold(16))
                 .foregroundColor(Color(.main))
 

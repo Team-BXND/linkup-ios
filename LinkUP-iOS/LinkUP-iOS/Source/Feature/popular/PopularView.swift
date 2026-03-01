@@ -40,9 +40,9 @@ struct PopularView: View {
                         Text("🔥 지금 뜨거운 Q&A")
                             .font(.semibold(18))
                         
-                        ForEach(viewModel.hotPopulars) { popular in
+                        ForEach(Array(viewModel.hotPopulars.enumerated()), id: \.element.id) { index, popular in
                             NavigationLink(value: popular) {
-                                PopularQuestionCardView(popular: popular)
+                                PopularQuestionCardView(popular: popular, rank: index + 1)
                             }
                             .buttonStyle(PlainButtonStyle())
                         }

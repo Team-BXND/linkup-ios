@@ -42,7 +42,7 @@ struct PostsView: View {
                                     .font(.bold(16))
                                     .padding(.horizontal, 20)
                                     .padding(.vertical, 10)
-                                    .background(viewModel.selectedTab == .hot ? Color.main : Color.white)
+                                    .background(viewModel.selectedTab == .hot ? Color("Main") : Color.white)
                                     .foregroundColor(viewModel.selectedTab == .hot ? .white : .black)
                                     .cornerRadius(25)
                                     .shadow(color: .black.opacity(0.1), radius: 2, y: 1)
@@ -56,7 +56,7 @@ struct PostsView: View {
                                     .font(.bold(16))
                                     .padding(.horizontal, 20)
                                     .padding(.vertical, 10)
-                                    .background(viewModel.selectedTab == .list ? .main : Color.white)
+                                    .background(viewModel.selectedTab == .list ? Color("Main") : Color.white)
                                     .foregroundColor(viewModel.selectedTab == .list ? .white : .black)
                                     .cornerRadius(25)
                                     .shadow(color: .black.opacity(0.1), radius: 2, y: 1)
@@ -72,7 +72,7 @@ struct PostsView: View {
                                             .font(.medium(12))
                                             .padding(.horizontal, 16)
                                             .padding(.vertical, 8)
-                                            .background(viewModel.selectedCategory == nil ? .main : Color.gray)
+                                            .background(viewModel.selectedCategory == nil ? Color("Main") : Color(UIColor.systemGray5))
                                             .foregroundColor(.white)
                                             .cornerRadius(20)
                                     }
@@ -82,7 +82,7 @@ struct PostsView: View {
                                                 .font(.medium(12))
                                                 .padding(.horizontal, 16)
                                                 .padding(.vertical, 8)
-                                                .background(viewModel.selectedCategory == category ? .main : Color.gray)
+                                                .background(viewModel.selectedCategory == category ? Color("Main") : Color(UIColor.systemGray5))
                                                 .foregroundColor(.white)
                                                 .cornerRadius(20)
                                         }
@@ -102,7 +102,7 @@ struct PostsView: View {
                                         HStack(alignment: .top, spacing: 16) {
                                             Text("\(index + 1)")
                                                 .font(.semibold(16))
-                                                .foregroundColor(.main)
+                                                .foregroundColor(Color("Main"))
                                                 .frame(width: 30)
 
                                             VStack(alignment: .leading, spacing: 8) {
@@ -194,7 +194,7 @@ struct PostsView: View {
                         .font(.system(size: 24, weight: .medium))
                         .foregroundColor(.white)
                         .frame(width: 56, height: 56)
-                        .background(.main)
+                        .background(Color("Main"))
                         .clipShape(Circle())
                         .shadow(color: .black.opacity(0.2), radius: 8, y: 4)
                 }

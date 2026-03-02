@@ -33,7 +33,7 @@ extension PostAPI: TargetType {
         case .deleteposting(let id):           return "/posts/\(id)"
         case .answering(_, let id):            return "/posts/\(id)/answer"
         case .deleteanswer(let id):            return "/posts/\(id)/answer"
-        case .acceptanswer(let id, _):         return "/posts/\(id)/accept"
+        case .acceptanswer(let id, let commentId):  return "/posts/\(id)/accept/\(commentId)"
         case .like(let id):                    return "/posts/\(id)/like"
         }
     }
@@ -63,8 +63,8 @@ extension PostAPI: TargetType {
         case .answering(let content, _):
             return .requestParameters(parameters: ["content": content], encoding: JSONEncoding.default)
 
-        case .acceptanswer(_, let commentId):
-            return .requestParameters(parameters: ["commentId": commentId], encoding: JSONEncoding.default)
+        case .acceptanswer:
+            return .requestPlain
 
         default:
             return .requestPlain

@@ -31,7 +31,6 @@ class ProfileService {
         }()
         
         if let jsonString = String(data: response.data, encoding: .utf8) {
-            print(jsonString)
         }
         
         return try ErrorThrowing(response)

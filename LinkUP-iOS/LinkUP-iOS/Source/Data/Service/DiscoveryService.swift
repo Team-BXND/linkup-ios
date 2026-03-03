@@ -34,7 +34,6 @@ class DiscoveryService {
             
         }()
         if let jsonString = String(data: response.data, encoding: .utf8) {
-            print(jsonString)
         }
         return try ErrorThrowing(response)
     }
@@ -42,7 +41,6 @@ class DiscoveryService {
     func fetchRanking() async throws -> RankingResponse {
         
         let response = try await provider.request(target: .ranking)
-        print(response)
         
         return try ErrorThrowing(response)
     }

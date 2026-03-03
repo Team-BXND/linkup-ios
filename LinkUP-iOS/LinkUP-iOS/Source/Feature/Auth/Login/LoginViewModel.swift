@@ -14,17 +14,14 @@ class LoginViewModel : ObservableObject{
     
     func login() async throws {
         let logindata = AuthRequest(email: loginInfo.email,username: nil, password: loginInfo.password, code: nil)
-        print(logindata)
         do {
             let response = try await AuthService.shared.signin(loginInfo: logindata)
             UserDefaults.standard.set(response.data.accessToken, forKey: "access")
             UserDefaults.standard.set(response.data.refreshToken, forKey: "refresh")
             authManager?.isLogin = true
-            print(response)
         } catch {
             isfailed = true
             
-            print(error.localizedDescription)
             
         }
     }

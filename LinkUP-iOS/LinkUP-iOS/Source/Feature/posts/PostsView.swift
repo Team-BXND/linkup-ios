@@ -207,7 +207,6 @@ struct PostsView: View {
             WriteView().environmentObject(viewModel)
         }
         .onAppear {
-            print("🔵 [PostsView onAppear 호출]")
             popularViewModel.fetchPopular()
             viewModel.fetchPosts(page: 1)
         }

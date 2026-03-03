@@ -30,7 +30,6 @@ class AuthService {
     
     func codesend(email: AuthRequest) async throws -> APIResponse {
         let response = try await provider.request(target: .codesend(email: email))
-        print(response)
         
         return try ErrorThrowing(response)
     }

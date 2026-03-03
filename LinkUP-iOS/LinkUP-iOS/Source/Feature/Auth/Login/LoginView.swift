@@ -68,6 +68,5 @@ struct LoginView: View {
 }
 
 #Preview {
-    @Previewable @State var yaho = 2
     LoginView()
 }

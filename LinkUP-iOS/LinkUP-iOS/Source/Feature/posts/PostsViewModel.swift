@@ -55,7 +55,6 @@ class PostsViewModel: ObservableObject {
                     self.selectedPost = Post(id: id, from: response.data)
                 }
             } catch {
-                print("❌ [fetchPostDetail 실패]: \(error)")
             }
         }
     }
@@ -72,7 +71,6 @@ class PostsViewModel: ObservableObject {
                 )
                 try await service.createPost(content: request)
             } catch {
-                print("❌ [createPost 실패]: \(error)")
             }
             await MainActor.run {
                 self.fetchPosts(category: self.selectedCategory, page: 1)
@@ -88,7 +86,6 @@ class PostsViewModel: ObservableObject {
                 try await service.updatePost(id: id, content: request)
                 await MainActor.run { self.fetchPosts(category: self.selectedCategory, page: 1) }
             } catch {
-                print("❌ [updatePost 실패]: \(error)")
             }
         }
     }
@@ -100,7 +97,6 @@ class PostsViewModel: ObservableObject {
                 try await service.deletePost(id: id)
                 await MainActor.run { self.posts.removeAll { $0.id == id } }
             } catch {
-                print("❌ [deletePost 실패]: \(error)")
             }
         }
     }
@@ -111,7 +107,6 @@ class PostsViewModel: ObservableObject {
             do {
                 try await service.createAnswer(postId: postId, content: content)
             } catch {
-                print("❌ [createAnswer 실패]: \(error)")
             }
             await MainActor.run { self.fetchPostDetail(id: postId) }
         }
@@ -123,7 +118,6 @@ class PostsViewModel: ObservableObject {
             do {
                 try await service.deleteAnswer(id: id)
             } catch {
-                print("❌ [deleteAnswer 실패]: \(error)")
             }
         }
     }
@@ -135,7 +129,6 @@ class PostsViewModel: ObservableObject {
                 try await service.acceptAnswer(postId: postId, commentId: commentId)
                 await MainActor.run { self.fetchPostDetail(id: postId) }
             } catch {
-                print("❌ [acceptAnswer 실패]: \(error)")
             }
         }
     }
@@ -146,7 +139,6 @@ class PostsViewModel: ObservableObject {
             do {
                 try await service.toggleLike(id: postId)
             } catch {
-                print("❌ [toggleLike 실패]: \(error)")
             }
             await MainActor.run {
                 if let idx = self.posts.firstIndex(where: { $0.id == postId }) {

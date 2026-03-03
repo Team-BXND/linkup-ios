@@ -19,20 +19,20 @@ struct PopularQuestionCardView: View {
             VStack(alignment: .leading, spacing: 8) {
                 Text(popular.title)
                     .font(.semibold(16))
-                    .foregroundColor(.black)
+                    .foregroundColor(.appPrimaryText)
 
                 HStack(spacing: 4) {
                     Text(popular.category.rawValue)
                         .font(.regular(12))
-                        .foregroundColor(.gray)
+                        .foregroundColor(.appSecondaryText)
                     
                     Text("\(popular.author ?? "") 님")
                         .font(.regular(12))
-                        .foregroundColor(.gray)
+                        .foregroundColor(.appSecondaryText)
                     
                     Text("유용해요 \(popular.like)")
                         .font(.regular(12))
-                        .foregroundColor(.gray)
+                        .foregroundColor(.appSecondaryText)
                 }
             }
             Spacer()
@@ -42,7 +42,7 @@ struct PopularQuestionCardView: View {
         .background(
             RoundedRectangle(cornerRadius: 16)
                 .stroke(
-                    popular.isAccepted ? Color.main : Color.gray.opacity(0.3)
+                    popular.isAccepted ? Color.main : Color.appSeparator
                 )
         )
     }

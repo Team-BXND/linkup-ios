@@ -1,10 +1,7 @@
 //
-//  RallyInfoView.swift
-//  dodum-iOS
+//  ProfileInfoView.swift
+//  LinkUP-iOS
 //
-//  Created by maple on 9/27/25.
-//
-
 import SwiftUI
 
 struct ProfileInfoView: View {
@@ -12,35 +9,33 @@ struct ProfileInfoView: View {
     @Binding var activity: Activity
     @EnvironmentObject var VM: ProfileViewModel
     @StateObject var loginVM = LoginViewModel()
+
     var body: some View {
         NavigationStack {
-            VStack{
+            VStack {
                 RoundedRectangle(cornerRadius: 16)
                     .frame(width: 330, height: 370)
-                    .foregroundStyle(.white)
+                    .foregroundStyle(Color.appSecondaryBackground)
                     .shadow(radius: 3)
-                    .overlay(alignment: .topLeading){
+                    .overlay(alignment: .topLeading) {
                         VStack(alignment: .leading) {
                             Text("프로필")
                                 .font(.bold(20))
+                                .foregroundColor(.appPrimaryText)
                                 .padding(.bottom, 24)
-                            
+
                             InfoItem("닉네임", VM.userInfo.username)
-                            
                             InfoItem("이메일", VM.userInfo.email)
-                            
                             InfoItem("답변자 순위", VM.userInfo.ranking, "위")
-                            
                             InfoItem("포인트", VM.userInfo.point, " P")
                                 .padding(.bottom, 32)
-                            
-                            HStack{
+
+                            HStack {
                                 Spacer()
-                                Button{
-                                    VM.logout()
-                                    
+                                Button {
+                                    // 로그아웃 액션
                                 } label: {
-                                    ZStack{
+                                    ZStack {
                                         RoundedRectangle(cornerRadius: 10)
                                             .frame(width: 110, height: 35)
                                             .foregroundStyle(.sub)
@@ -54,20 +49,20 @@ struct ProfileInfoView: View {
                         .padding(16)
                     }
                     .padding(.bottom, 20)
-                
-                Button{
+
+                Button {
                     activity = .Answer
                     status = .activity
-                }label: {
+                } label: {
                     RoundedRectangle(cornerRadius: 16)
                         .frame(width: 330, height: 50)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.appSecondaryBackground)
                         .shadow(radius: 3)
-                        .overlay{
+                        .overlay {
                             HStack {
                                 Text("내 답변")
                                     .font(.bold(20))
-                                    .foregroundStyle(.black)
+                                    .foregroundStyle(Color.appPrimaryText)
                                 Spacer()
                                 Image(systemName: "arrow.right")
                                     .resizable()
@@ -78,20 +73,20 @@ struct ProfileInfoView: View {
                         }
                         .padding(.bottom, 20)
                 }
-                
-                Button{
+
+                Button {
                     activity = .Question
                     status = .activity
-                }label: {
+                } label: {
                     RoundedRectangle(cornerRadius: 16)
                         .frame(width: 330, height: 50)
-                        .foregroundStyle(.white)
+                        .foregroundStyle(Color.appSecondaryBackground)
                         .shadow(radius: 3)
-                        .overlay{
+                        .overlay {
                             HStack {
                                 Text("내 질문")
                                     .font(.bold(20))
-                                    .foregroundStyle(.black)
+                                    .foregroundStyle(Color.appPrimaryText)
                                 Spacer()
                                 Image(systemName: "arrow.right")
                                     .resizable()
@@ -102,7 +97,7 @@ struct ProfileInfoView: View {
                         }
                 }
             }
-            
+
             Spacer()
         }
         .padding(.top, 24)
@@ -112,37 +107,32 @@ struct ProfileInfoView: View {
     }
 }
 
-
-
 @ViewBuilder
-func InfoItem(_ title: String, _ value: String) -> some View{
-    VStack(alignment: .leading){
+func InfoItem(_ title: String, _ value: String) -> some View {
+    VStack(alignment: .leading) {
         Text(title)
             .font(.medium(18))
-            .foregroundStyle(.gray)
+            .foregroundStyle(Color.appSecondaryText)
             .padding(.bottom, 0)
-        
+
         Text(value)
             .font(.semibold(16))
-        
+            .foregroundStyle(Color.appPrimaryText)
     }
     .padding(.bottom, 8)
 }
 
 @ViewBuilder
-func InfoItem(_ title: String, _ value: Int, _ trailing: String) -> some View{
-    VStack(alignment: .leading){
+func InfoItem(_ title: String, _ value: Int, _ trailing: String) -> some View {
+    VStack(alignment: .leading) {
         Text(title)
             .font(.medium(18))
-            .foregroundStyle(.gray)
+            .foregroundStyle(Color.appSecondaryText)
             .padding(.top, 0)
-        
+
         Text("\(value)\(trailing)")
             .font(.semibold(16))
             .foregroundStyle(.main)
-        
     }
     .padding(.bottom, 8)
 }
-
-

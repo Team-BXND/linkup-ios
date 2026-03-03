@@ -1,10 +1,7 @@
 //
-//  ProfileView.swift
-//  dodum-iOS
+//  RankingView.swift
+//  LinkUP-iOS
 //
-//  Created by maple on 9/27/25.
-//
-
 import SwiftUI
 
 struct RankingView: View {
@@ -15,6 +12,7 @@ struct RankingView: View {
                 VStack(spacing: 24) {
                     Text("🏆 답변자 랭킹")
                         .font(.bold(20))
+                        .foregroundColor(.appPrimaryText)
                         .padding(.top, 16)
                     
                     VStack(alignment: .leading, spacing: 16) {
@@ -26,7 +24,7 @@ struct RankingView: View {
                     .padding(.bottom, 13)
                 }
                 .frame(maxWidth: .infinity)
-                .background(Color.white)
+                .background(Color.appSecondaryBackground)
                 .cornerRadius(20)
                 .shadow(color: Color.black.opacity(0.06), radius: 1, x: 2, y: 0)
                 .shadow(color: Color.black.opacity(0.06), radius: 1, x: -2, y: 0)
@@ -42,16 +40,16 @@ struct RankingView: View {
                 .padding(.vertical, 16)
                 .padding(.horizontal, 16)
                 .frame(maxWidth: .infinity)
-                .background(Color.white)
+                .background(Color.appSecondaryBackground)
                 .cornerRadius(20)
                 .shadow(color: Color.black.opacity(0.06), radius: 1, x: 2, y: 0)
                 .shadow(color: Color.black.opacity(0.06), radius: 1, x: -2, y: 0)
                 .shadow(color: Color.black.opacity(0.06), radius: 1, x: 0, y: 4)
-                
             }
             .padding(.horizontal, 32)
             .padding(.top, 24)
         }
+        .background(Color.appBackground.ignoresSafeArea())
         .onAppear {
             viewModel.fetchRanking()
         }

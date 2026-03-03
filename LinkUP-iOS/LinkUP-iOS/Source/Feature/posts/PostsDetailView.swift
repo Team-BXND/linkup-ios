@@ -3,6 +3,7 @@
 //  LinkUP-iOS
 //
 import SwiftUI
+import PhotosUI
 
 struct PostsDetailView: View {
     @EnvironmentObject var viewModel: PostsViewModel
@@ -14,7 +15,13 @@ struct PostsDetailView: View {
     @State private var showEditView = false
     @State private var showAcceptAlert = false
     @State private var acceptCommentId: Int? = nil
-    @FocusState private var isAnswerFocused: Bool
+    @State private var isAnswerFocused: Bool = false
+
+    // WriteView 스타일 마크다운 + 이미지 지원
+    @State private var selectedPhoto: PhotosPickerItem? = nil
+    @State private var isUploadingImage = false
+    private let answerTextViewRef = TextViewRef()
+    @State private var savedSelection: NSRange? = nil
 
     var displayPost: Post {
         viewModel.selectedPost ?? post
@@ -33,6 +40,7 @@ struct PostsDetailView: View {
 
                         Text(displayPost.title)
                             .font(.bold(16))
+                            .foregroundColor(.appPrimaryText)
                             .lineLimit(nil)
                             .fixedSize(horizontal: false, vertical: true)
 
@@ -44,7 +52,7 @@ struct PostsDetailView: View {
                                     .font(.semibold(12))
                                     .foregroundColor(.white)
                                     .frame(width: 24, height: 24)
-                                    .background((displayPost.isLike ?? false) ? Color("Main") : Color.gray)
+                                    .background((displayPost.isLike ?? false) ? Color("Main") : Color(UIColor.systemGray3))
                                     .clipShape(Circle())
                             }
                         }
@@ -59,7 +67,7 @@ struct PostsDetailView: View {
                         Text("유용해요 : \(displayPost.like)개")
                     }
                     .font(.medium(10))
-                    .foregroundColor(.gray)
+                    .foregroundColor(.appSecondaryText)
                     .padding(.horizontal, 20)
                     .padding(.top, 12)
 
@@ -74,7 +82,8 @@ struct PostsDetailView: View {
                                 .font(.medium(12))
                                 .padding(.horizontal, 16)
                                 .padding(.vertical, 8)
-                                .background(Color(UIColor.systemGray5))
+                                .background(Color.appButtonInactive)
+                                .foregroundColor(.appPrimaryText)
                                 .cornerRadius(8)
 
                             Button("삭제") { showDeleteAlert = true }
@@ -94,6 +103,7 @@ struct PostsDetailView: View {
                     VStack(alignment: .leading, spacing: 16) {
                         Text("\(displayPost.comments?.count ?? 0)개의 답변")
                             .font(.semibold(16))
+                            .foregroundColor(.appPrimaryText)
                             .padding(.horizontal, 20)
 
                         ForEach(displayPost.comments ?? []) { comment in
@@ -108,6 +118,7 @@ struct PostsDetailView: View {
 
                                     Text("\(comment.author) 님의 답변")
                                         .font(.bold(14))
+                                        .foregroundColor(.appPrimaryText)
                                     Spacer()
 
                                     if displayPost.isAuthor == true && !comment.isAccepted {
@@ -135,14 +146,11 @@ struct PostsDetailView: View {
                                 }
                                 Text("작성일 : \(comment.createdAt)")
                                     .font(.medium(10))
-                                    .foregroundColor(.gray)
-                                Text(comment.content)
-                                    .font(.medium(12))
-                                    .foregroundColor(.primary)
-                                    .lineSpacing(6)
+                                    .foregroundColor(.appSecondaryText)
+                                PostContentView(content: comment.content)
                             }
                             .padding(20)
-                            .background(Color(UIColor.systemGray6))
+                            .background(Color.appTertiaryBackground)
                             .cornerRadius(12)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 12)
@@ -155,42 +163,69 @@ struct PostsDetailView: View {
                 }
             }
 
+            // ── 댓글 입력 영역 (WriteView 스타일) ─────────────────
             if displayPost.isAuthor != true {
                 VStack(spacing: 0) {
                     Divider()
 
+                    // 마크다운 툴바 (포커스 시 노출)
                     if isAnswerFocused {
-                        HStack(spacing: 16) {
-                            ForEach([("B", "bold"), ("I", "italic"), ("U", "underline"), ("S", "strikethrough")], id: \.0) { label, _ in
-                                Button(action: {}) {
-                                    Text(label)
-                                        .font(label == "B" ? .system(size: 15, weight: .bold) :
-                                              label == "I" ? .system(size: 15).italic() :
-                                              .system(size: 15))
-                                        .underline(label == "U")
-                                        .strikethrough(label == "S")
-                                        .foregroundColor(.gray)
-                                        .frame(width: 28, height: 28)
-                                }
+                        HStack(spacing: 20) {
+                            Button(action: { applyMarkdown(prefix: "**", suffix: "**") }) {
+                                Text("B")
+                                    .font(.system(size: 15, weight: .bold))
+                                    .foregroundColor(.appSecondaryText)
+                                    .frame(width: 28, height: 28)
                             }
-                            Button(action: {}) { Image(systemName: "link").foregroundColor(.gray) }
-                            Button(action: {}) { Image(systemName: "photo").foregroundColor(.gray) }
+                            Button(action: { applyMarkdown(prefix: "*", suffix: "*") }) {
+                                Text("I")
+                                    .font(.system(size: 15).italic())
+                                    .foregroundColor(.appSecondaryText)
+                                    .frame(width: 28, height: 28)
+                            }
+                            Button(action: { applyMarkdown(prefix: "~~", suffix: "~~") }) {
+                                Text("S")
+                                    .font(.system(size: 15))
+                                    .strikethrough()
+                                    .foregroundColor(.appSecondaryText)
+                                    .frame(width: 28, height: 28)
+                            }
+                            PhotosPicker(selection: $selectedPhoto, matching: .images) {
+                                Image(systemName: "photo")
+                                    .foregroundColor(.appSecondaryText)
+                                    .frame(width: 28, height: 28)
+                            }
                             Spacer()
                         }
                         .padding(.horizontal, 16)
                         .padding(.vertical, 8)
-                        .background(Color(UIColor.systemGray6))
+                        .background(Color.appTertiaryBackground)
                     }
 
+                    // 텍스트 입력 + 전송 버튼
                     HStack(spacing: 10) {
-                        TextField("따뜻한 댓글을 입력해주세요!", text: $answerText, axis: .vertical)
-                            .font(.medium(14))
-                            .lineLimit(1...4)
-                            .padding(.horizontal, 14)
-                            .padding(.vertical, 10)
-                            .background(Color(UIColor.systemGray6))
-                            .cornerRadius(20)
-                            .focused($isAnswerFocused)
+                        ZStack(alignment: .leading) {
+                            if answerText.isEmpty {
+                                Text("따뜻한 댓글을 입력해주세요!")
+                                    .font(.medium(14))
+                                    .foregroundColor(.appPlaceholder)
+                                    .padding(.horizontal, 14)
+                                    .allowsHitTesting(false)
+                            }
+                            MarkdownTextEditor(text: $answerText, onTextViewReady: { textView in
+                                answerTextViewRef.textView = textView
+                            }, onFocusChange: { focused in
+                                isAnswerFocused = focused
+                                // 포커스 해제 직전 선택 영역 저장
+                                if !focused, let tv = answerTextViewRef.textView {
+                                    savedSelection = tv.selectedRange
+                                }
+                            })
+                            .frame(height: 36)
+                        }
+                        .padding(.horizontal, 4)
+                        .background(Color.appTertiaryBackground)
+                        .cornerRadius(20)
 
                         Button(action: { submitAnswer() }) {
                             Image(systemName: "arrow.up")
@@ -198,23 +233,23 @@ struct PostsDetailView: View {
                                 .foregroundColor(.white)
                                 .frame(width: 36, height: 36)
                                 .background(answerText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
-                                            ? Color(UIColor.systemGray4) : Color.blue)
+                                            ? Color(UIColor.systemGray3) : Color("Main"))
                                 .clipShape(Circle())
                         }
                         .disabled(answerText.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty)
                     }
                     .padding(.horizontal, 16)
                     .padding(.vertical, 12)
-                    .background(Color.white)
+                    .background(Color.appSecondaryBackground)
                 }
             }
         }
-        .background(Color.white)
+        .background(Color.appBackground)
         .navigationBarBackButtonHidden(true)
         .toolbar {
             ToolbarItem(placement: .navigationBarLeading) {
                 Button(action: { dismiss() }) {
-                    Image(systemName: "chevron.left").foregroundColor(.primary)
+                    Image(systemName: "chevron.left").foregroundColor(.appPrimaryText)
                 }
             }
         }
@@ -243,18 +278,92 @@ struct PostsDetailView: View {
             WriteView(editPost: displayPost)
                 .environmentObject(viewModel)
         }
+        .onChange(of: selectedPhoto) { _, newItem in
+            guard let newItem else { return }
+            Task { await uploadAnswerImage(item: newItem) }
+        }
         .onAppear {
             viewModel.selectPost(post)
             viewModel.fetchPostDetail(id: post.id)
         }
     }
 
+    // MARK: - 선택 영역에 마크다운 적용
+    private func applyMarkdown(prefix: String, suffix: String) {
+        guard let textView = answerTextViewRef.textView else {
+            answerText += "\(prefix)텍스트\(suffix)"
+            return
+        }
+        textView.becomeFirstResponder()
+
+        // 버튼 탭으로 포커스가 잠깐 해제됐을 때 저장해둔 선택 영역 복원
+        let activeRange: NSRange
+        if textView.selectedRange.length > 0 {
+            activeRange = textView.selectedRange
+        } else if let saved = savedSelection, saved.length > 0 {
+            textView.selectedRange = saved
+            activeRange = saved
+        } else {
+            activeRange = textView.selectedRange
+        }
+        savedSelection = nil
+
+        let nsText = textView.text as NSString
+        if activeRange.length > 0 {
+            let selected = nsText.substring(with: activeRange)
+            let replaced = "\(prefix)\(selected)\(suffix)"
+            if let range = textView.selectedTextRange {
+                textView.replace(range, withText: replaced)
+            }
+            answerText = textView.text
+            let newLocation = activeRange.location + prefix.count + activeRange.length + suffix.count
+            textView.selectedRange = NSRange(location: newLocation, length: 0)
+        } else {
+            let placeholder = "텍스트"
+            let insertion = "\(prefix)\(placeholder)\(suffix)"
+            if let range = textView.selectedTextRange {
+                textView.replace(range, withText: insertion)
+            }
+            answerText = textView.text
+            let newLocation = activeRange.location + prefix.count + placeholder.count
+            textView.selectedRange = NSRange(location: newLocation, length: 0)
+        }
+    }
+
+    // MARK: - 이미지 업로드 (댓글용)
+    private func uploadAnswerImage(item: PhotosPickerItem) async {
+        guard let data = try? await item.loadTransferable(type: Data.self) else { return }
+        await MainActor.run { isUploadingImage = true }
+        do {
+            guard let uiImage = UIImage(data: data) else { return }
+            var quality: CGFloat = 0.8
+            var compressed = uiImage.jpegData(compressionQuality: quality) ?? data
+            while compressed.count > 1_000_000 && quality > 0.1 {
+                quality -= 0.1
+                compressed = uiImage.jpegData(compressionQuality: quality) ?? data
+            }
+            let fileName = "\(UUID().uuidString).jpeg"
+            let s3key = try await UploadService.shared.uploadImage(data: compressed, fileName: fileName)
+            await MainActor.run {
+                answerText += "![](\(s3key))"
+                isUploadingImage = false
+                selectedPhoto = nil
+            }
+        } catch {
+            await MainActor.run {
+                isUploadingImage = false
+                selectedPhoto = nil
+            }
+        }
+    }
+
+    // MARK: - 댓글 전송
     private func submitAnswer() {
         let trimmed = answerText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !trimmed.isEmpty else { return }
         viewModel.createAnswer(postId: displayPost.id, content: trimmed)
         answerText = ""
-        isAnswerFocused = false
+        answerTextViewRef.textView?.resignFirstResponder()
     }
 }
 
@@ -293,7 +402,7 @@ struct PostContentView: View {
             ForEach(blocks.indices, id: \.self) { i in
                 switch blocks[i] {
                 case .text(let str):
-                    MarkdownTextView(text: str)
+                    MarkdownTextView(text: str, fontSize: 15)
                 case .image(let s3Key):
                     PresignedImageView(s3Key: s3Key)
                 }
@@ -310,10 +419,11 @@ enum ContentBlock {
 // MARK: - 마크다운 텍스트 렌더링
 struct MarkdownTextView: View {
     let text: String
+    var fontSize: CGFloat = 14
 
     var body: some View {
         parsedText
-            .foregroundColor(.primary)
+            .foregroundColor(.appPrimaryText)
             .lineSpacing(6)
             .fixedSize(horizontal: false, vertical: true)
     }
@@ -321,7 +431,7 @@ struct MarkdownTextView: View {
     var parsedText: Text {
         var result = Text("")
         for part in parseMarkdown(text) {
-            var t = Text(part.text)
+            var t = Text(part.text).font(.system(size: fontSize))
             if part.bold { t = t.bold() }
             if part.italic { t = t.italic() }
             if part.strikethrough { t = t.strikethrough() }
@@ -369,6 +479,7 @@ struct MarkdownTextView: View {
         return parts
     }
 }
+
 // MARK: - Presigned URL 이미지
 struct PresignedImageView: View {
     let s3Key: String
@@ -414,12 +525,14 @@ struct PresignedImageView: View {
     }
 
     private var failureView: some View {
-        Color(UIColor.systemGray5)
+        Color.appButtonInactive
             .frame(height: 120)
             .cornerRadius(8)
-            .overlay(Image(systemName: "photo").foregroundColor(.gray))
+            .overlay(Image(systemName: "photo").foregroundColor(.appSecondaryText))
     }
 }
+
+
 
 #Preview {
     NavigationView {
@@ -427,7 +540,7 @@ struct PresignedImageView: View {
             id: 1, title: "샘플 질문", author: "작성자",
             category: .school, like: 5, createdAt: "2026-01-18",
             isAccepted: false, preview: "샘플", commentCount: 0,
-            content: "**볼드** *이탈릭* ~~취소선~~", isLike: false, isAuthor: true, comments: []
+            content: "**볼드** *이탈릭* ~~취소선~~", isLike: false, isAuthor: false, comments: []
         ))
         .environmentObject(PostsViewModel.shared)
     }

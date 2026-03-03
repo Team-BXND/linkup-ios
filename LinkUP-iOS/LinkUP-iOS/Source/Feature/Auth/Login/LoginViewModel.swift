@@ -7,7 +7,7 @@
 import SwiftUI
 import Combine
 class LoginViewModel : ObservableObject{
-    @Published var loginInfo: LoginModel = LoginModel(email: "a@b.c", password: "qqqqqq1!")
+    @Published var loginInfo: LoginModel = LoginModel(email: "", password: "")
     @Published var isfailed = false
     @Published var errormessage = ""
     var authManager: AuthManager?

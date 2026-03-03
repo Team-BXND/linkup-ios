@@ -7,30 +7,30 @@ import SwiftUI
 struct PostsView: View {
     @StateObject private var viewModel = PostsViewModel.shared
     @StateObject private var popularViewModel = PopularViewModel()
+    @State private var selectedCategory: Category?
     @State private var showWriteView = false
 
     var body: some View {
         NavigationView {
             ZStack(alignment: .bottomTrailing) {
+                Color.appBackground.ignoresSafeArea()
+
                 ScrollView {
                     VStack(alignment: .leading, spacing: 20) {
 
                         Text("💬대소고에서 궁금한 점이 있다면?")
                             .font(.semibold(18))
-                            .foregroundColor(.primary)
+                            .foregroundColor(.appPrimaryText)
                             .padding(.leading, 32)
-
+                        
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack(spacing: 12) {
-                                ForEach(["School", "Code", "Project"], id: \.self) { name in
-                                    Image(name)
-                                        .resizable()
-                                        .scaledToFit()
-                                        .frame(height: 180)
-                                        .cornerRadius(20)
-                                }
+                                CategoryNavButton(selectedCategory: $selectedCategory, category: .school, imageName: "School")
+                                CategoryNavButton(selectedCategory: $selectedCategory, category: .code, imageName: "Code")
+                                CategoryNavButton(selectedCategory: $selectedCategory, category: .project, imageName: "Project")
                             }
                             .padding(.horizontal, 32)
+                            .buttonStyle(PlainButtonStyle())
                         }
 
                         HStack(spacing: 12) {
@@ -42,8 +42,8 @@ struct PostsView: View {
                                     .font(.bold(16))
                                     .padding(.horizontal, 20)
                                     .padding(.vertical, 10)
-                                    .background(viewModel.selectedTab == .hot ? Color("Main") : Color.white)
-                                    .foregroundColor(viewModel.selectedTab == .hot ? .white : .black)
+                                    .background(viewModel.selectedTab == .hot ? Color("Main") : Color.appSecondaryBackground)
+                                    .foregroundColor(viewModel.selectedTab == .hot ? .white : .appPrimaryText)
                                     .cornerRadius(25)
                                     .shadow(color: .black.opacity(0.1), radius: 2, y: 1)
                             }
@@ -56,8 +56,8 @@ struct PostsView: View {
                                     .font(.bold(16))
                                     .padding(.horizontal, 20)
                                     .padding(.vertical, 10)
-                                    .background(viewModel.selectedTab == .list ? Color("Main") : Color.white)
-                                    .foregroundColor(viewModel.selectedTab == .list ? .white : .black)
+                                    .background(viewModel.selectedTab == .list ? Color("Main") : Color.appSecondaryBackground)
+                                    .foregroundColor(viewModel.selectedTab == .list ? .white : .appPrimaryText)
                                     .cornerRadius(25)
                                     .shadow(color: .black.opacity(0.1), radius: 2, y: 1)
                             }
@@ -72,7 +72,7 @@ struct PostsView: View {
                                             .font(.medium(12))
                                             .padding(.horizontal, 16)
                                             .padding(.vertical, 8)
-                                            .background(viewModel.selectedCategory == nil ? Color("Main") : Color(UIColor.systemGray5))
+                                            .background(viewModel.selectedCategory == nil ? Color("Main") : Color(UIColor.systemGray4))
                                             .foregroundColor(.white)
                                             .cornerRadius(20)
                                     }
@@ -82,7 +82,7 @@ struct PostsView: View {
                                                 .font(.medium(12))
                                                 .padding(.horizontal, 16)
                                                 .padding(.vertical, 8)
-                                                .background(viewModel.selectedCategory == category ? Color("Main") : Color(UIColor.systemGray5))
+                                                .background(viewModel.selectedCategory == category ? Color("Main") : Color(UIColor.systemGray4))
                                                 .foregroundColor(.white)
                                                 .cornerRadius(20)
                                         }
@@ -108,7 +108,7 @@ struct PostsView: View {
                                             VStack(alignment: .leading, spacing: 8) {
                                                 Text(item.title)
                                                     .font(.semibold(16))
-                                                    .foregroundColor(.primary)
+                                                    .foregroundColor(.appPrimaryText)
                                                     .multilineTextAlignment(.leading)
 
                                                 HStack(spacing: 16) {
@@ -121,12 +121,12 @@ struct PostsView: View {
                                                         Text("답변수 \(item.commentCount ?? 0)").font(.system(size: 12))
                                                     }
                                                 }
-                                                .foregroundColor(.gray)
+                                                .foregroundColor(.appSecondaryText)
                                             }
                                             Spacer()
                                         }
                                         .padding(20)
-                                        .background(Color.white)
+                                        .background(Color.appSecondaryBackground)
                                         .cornerRadius(12)
                                         .shadow(color: .black.opacity(0.05), radius: 3, y: 1)
                                     }
@@ -148,7 +148,7 @@ struct PostsView: View {
                                             VStack(alignment: .leading, spacing: 8) {
                                                 Text(post.title)
                                                     .font(.semibold(16))
-                                                    .foregroundColor(.primary)
+                                                    .foregroundColor(.appPrimaryText)
                                                     .multilineTextAlignment(.leading)
 
                                                 HStack(spacing: 16) {
@@ -161,12 +161,12 @@ struct PostsView: View {
                                                         Text("답변수 \(post.commentCount)").font(.system(size: 12))
                                                     }
                                                 }
-                                                .foregroundColor(.gray)
+                                                .foregroundColor(.appSecondaryText)
                                             }
                                             Spacer()
                                         }
                                         .padding(20)
-                                        .background(Color.white)
+                                        .background(Color.appSecondaryBackground)
                                         .cornerRadius(12)
                                         .shadow(color: .black.opacity(0.05), radius: 3, y: 1)
                                     }
@@ -207,7 +207,6 @@ struct PostsView: View {
             WriteView().environmentObject(viewModel)
         }
         .onAppear {
-            print("🔵 [PostsView onAppear 호출]") // ✅ 추가
             popularViewModel.fetchPopular()
             viewModel.fetchPosts(page: 1)
         }

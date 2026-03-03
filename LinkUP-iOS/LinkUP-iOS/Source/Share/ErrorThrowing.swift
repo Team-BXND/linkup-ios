@@ -10,9 +10,7 @@ func ErrorThrowing<T: Decodable>(_ response: Response) throws -> T {
         do {
             return try response.map(T.self)
         } catch {
-            print("❌ [디코딩 실패] 타입: \(T.self), 에러: \(error)")
             if let json = String(data: response.data, encoding: .utf8) {
-                print("❌ [디코딩 실패] JSON: \(json)")
             }
             throw error
         }

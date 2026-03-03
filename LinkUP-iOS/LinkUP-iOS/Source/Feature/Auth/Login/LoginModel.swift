@@ -8,6 +8,6 @@
 import SwiftUI
 
 struct LoginModel {
-    var email: String = "yaho"
+    var email: String = ""
     var password: String
 }

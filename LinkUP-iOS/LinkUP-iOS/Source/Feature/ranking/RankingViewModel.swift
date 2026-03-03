@@ -36,9 +36,7 @@ class RankingViewModel: ObservableObject {
             do {
                 let response = try await service.fetchRanking()
                 self.rankings = response
-                print(response)
             } catch {
-                print("랭킹 페치 실패: \(error.localizedDescription)")
             }
         }
     }

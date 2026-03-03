@@ -17,9 +17,7 @@ class ProfileViewModel: ObservableObject {
         do {
             let response = try await ProfileService.shared.fetchUserInfo()
             userInfo = response.data
-            print(userInfo)
         } catch {
-            print("에러: \(error.localizedDescription)")
         }
     }
     
@@ -39,7 +37,6 @@ class ProfileViewModel: ObservableObject {
             let nextPage = isRefresh ? 0 : userActivity.meta.page + 1
             
             let response = try await ProfileService.shared.fetchUserActivity(type: type, page: nextPage)
-            print("불러온 페이지: \(nextPage)번째, 데이터 개수: \(response.data.count)")
             
             // 4. 데이터 갱신
             if isRefresh {
@@ -50,7 +47,6 @@ class ProfileViewModel: ObservableObject {
             userActivity.meta = response.meta
             
         } catch {
-            print("에러: \(error.localizedDescription)")
         }
         
         isLoading = false

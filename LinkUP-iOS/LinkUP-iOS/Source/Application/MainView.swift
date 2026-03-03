@@ -2,10 +2,12 @@ import SwiftUI
 
 struct MainView: View {
     @StateObject private var tabManager = TabManager()
-    
+
     var body: some View {
         NavigationStack {
             ZStack {
+                Color.appBackground.ignoresSafeArea()
+
                 VStack(spacing: 0) {
                     HStack {
                         Button(action: {
@@ -21,7 +23,7 @@ struct MainView: View {
                     }
                     .frame(maxWidth: .infinity, maxHeight: 40, alignment: .leading)
                     .padding(.top, 60)
-                    
+
                     Tabbar(tabManager: tabManager)
                 }
                 .ignoresSafeArea()

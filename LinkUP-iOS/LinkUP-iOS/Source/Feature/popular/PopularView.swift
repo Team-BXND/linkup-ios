@@ -39,6 +39,7 @@ struct PopularView: View {
                     VStack(alignment: .leading, spacing: 12) {
                         Text("🔥 지금 뜨거운 Q&A")
                             .font(.semibold(18))
+                            .foregroundColor(.appPrimaryText)
                         
                         ForEach(Array(viewModel.hotPopulars.enumerated()), id: \.element.id) { index, popular in
                             NavigationLink(value: popular) {
@@ -48,7 +49,7 @@ struct PopularView: View {
                         }
                     }
                     .padding(16)
-                    .background(Color.white)
+                    .background(Color.appSecondaryBackground)
                     .cornerRadius(20)
                     .shadow(color: Color.black.opacity(0.06), radius: 1, x: 2, y: 0)
                     .shadow(color: Color.black.opacity(0.06), radius: 1, x: -2, y: 0)

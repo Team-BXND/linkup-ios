@@ -6,10 +6,11 @@ import SwiftUI
 import PhotosUI
 import UIKit
 
-// MARK: - UITextView 래퍼 (선택 영역 접근용)
+// MARK: - UITextView 래퍼 (선택 영역 접근 + 포커스 콜백)
 struct MarkdownTextEditor: UIViewRepresentable {
     @Binding var text: String
     var onTextViewReady: (UITextView) -> Void
+    var onFocusChange: ((Bool) -> Void)? = nil
 
     func makeUIView(context: Context) -> UITextView {
         let textView = UITextView()
@@ -18,6 +19,7 @@ struct MarkdownTextEditor: UIViewRepresentable {
         textView.delegate = context.coordinator
         textView.isScrollEnabled = true
         textView.textContainerInset = UIEdgeInsets(top: 12, left: 12, bottom: 12, right: 12)
+        textView.textColor = UIColor.label
         onTextViewReady(textView)
         return textView
     }
@@ -28,17 +30,32 @@ struct MarkdownTextEditor: UIViewRepresentable {
             uiView.text = text
             uiView.selectedRange = selected
         }
+        uiView.textColor = UIColor.label
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(text: $text)
+        Coordinator(text: $text, onFocusChange: onFocusChange)
     }
 
     class Coordinator: NSObject, UITextViewDelegate {
         @Binding var text: String
-        init(text: Binding<String>) { _text = text }
+        var onFocusChange: ((Bool) -> Void)?
+
+        init(text: Binding<String>, onFocusChange: ((Bool) -> Void)?) {
+            _text = text
+            self.onFocusChange = onFocusChange
+        }
+
         func textViewDidChange(_ textView: UITextView) {
             text = textView.text
+        }
+
+        func textViewDidBeginEditing(_ textView: UITextView) {
+            onFocusChange?(true)
+        }
+
+        func textViewDidEndEditing(_ textView: UITextView) {
+            onFocusChange?(false)
         }
     }
 }
@@ -61,7 +78,6 @@ struct WriteView: View {
     @State private var isUploadingImage = false
     @FocusState private var focusedField: Field?
 
-    // UITextView 참조 보관
     private let textViewRef = TextViewRef()
 
     enum Field { case title, nickname, content }
@@ -71,16 +87,16 @@ struct WriteView: View {
     var body: some View {
         VStack(spacing: 0) {
 
-            // ── 헤더 ──────────────────────────────────────────────
+            // ── 헤더
             HStack {
                 Button(action: { dismiss() }) {
                     Image(systemName: "xmark")
                         .font(.system(size: 18, weight: .medium))
-                        .foregroundColor(.primary)
+                        .foregroundColor(.appPrimaryText)
                 }
                 Spacer()
                 if isEditMode {
-                    Text("글 수정").font(.semibold(16))
+                    Text("글 수정").font(.semibold(16)).foregroundColor(.appPrimaryText)
                     Spacer()
                     Image(systemName: "xmark").foregroundColor(.clear)
                 }
@@ -89,7 +105,7 @@ struct WriteView: View {
             .padding(.top, 20)
             .padding(.bottom, 16)
 
-            // ── 입력 필드 ──────────────────────────────────────────
+            // ── 입력 필드
             VStack(spacing: 10) {
                 HStack(spacing: 12) {
                     Text("Q")
@@ -97,17 +113,18 @@ struct WriteView: View {
                         .foregroundColor(Color("Main"))
                     TextField("제목을 입력하세요.", text: $title)
                         .font(.semibold(16))
+                        .foregroundColor(.appPrimaryText)
                         .focused($focusedField, equals: .title)
                 }
                 .padding()
-                .background(Color(UIColor.systemGray6))
+                .background(Color.appInputBackground)
                 .cornerRadius(12)
 
                 TextField("닉네임을 입력하세요.", text: $nickname)
                     .font(.semibold(16))
-                    .foregroundColor(isEditMode ? .gray.opacity(0.5) : .gray)
+                    .foregroundColor(isEditMode ? .appSecondaryText : .appPrimaryText)
                     .padding()
-                    .background(Color(UIColor.systemGray6))
+                    .background(Color.appInputBackground)
                     .cornerRadius(12)
                     .focused($focusedField, equals: .nickname)
                     .disabled(isEditMode)
@@ -116,14 +133,14 @@ struct WriteView: View {
                     HStack {
                         Text(selectedCategory?.displayName ?? "카테고리를 선택하세요.")
                             .font(.semibold(16))
-                            .foregroundColor(selectedCategory == nil ? .gray : .primary)
+                            .foregroundColor(selectedCategory == nil ? .appSecondaryText : .appPrimaryText)
                         Spacer()
                         Image(systemName: "chevron.down")
                             .font(.system(size: 14, weight: .semibold))
-                            .foregroundColor(.gray)
+                            .foregroundColor(.appSecondaryText)
                     }
                     .padding()
-                    .background(Color(UIColor.systemGray6))
+                    .background(Color.appInputBackground)
                     .cornerRadius(12)
                 }
                 .confirmationDialog("카테고리 선택", isPresented: $showCategoryPicker) {
@@ -137,7 +154,7 @@ struct WriteView: View {
                     if content.isEmpty {
                         Text("본문을 입력하세요")
                             .font(.medium(16))
-                            .foregroundColor(.gray)
+                            .foregroundColor(.appPlaceholder)
                             .padding(.horizontal, 20)
                             .padding(.top, 20)
                             .allowsHitTesting(false)
@@ -147,7 +164,7 @@ struct WriteView: View {
                     }
                 }
                 .frame(maxHeight: .infinity)
-                .background(Color(UIColor.systemGray6))
+                .background(Color.appInputBackground)
                 .cornerRadius(12)
                 .overlay(
                     Group {
@@ -167,21 +184,21 @@ struct WriteView: View {
             }
             .padding(.horizontal, 24)
 
-            // ── 하단 툴바 ─────────────────────────────────────────
+            // ── 하단 툴바
             VStack(spacing: 0) {
                 Divider()
                 HStack(spacing: 16) {
                     Button(action: { applyMarkdown(prefix: "**", suffix: "**") }) {
-                        Text("B").bold().foregroundColor(.gray).frame(width: 28, height: 28)
+                        Text("B").bold().foregroundColor(.appSecondaryText).frame(width: 28, height: 28)
                     }
                     Button(action: { applyMarkdown(prefix: "*", suffix: "*") }) {
-                        Text("I").italic().foregroundColor(.gray).frame(width: 28, height: 28)
+                        Text("I").italic().foregroundColor(.appSecondaryText).frame(width: 28, height: 28)
                     }
                     Button(action: { applyMarkdown(prefix: "~~", suffix: "~~") }) {
-                        Text("S").strikethrough().foregroundColor(.gray).frame(width: 28, height: 28)
+                        Text("S").strikethrough().foregroundColor(.appSecondaryText).frame(width: 28, height: 28)
                     }
                     PhotosPicker(selection: $selectedPhoto, matching: .images) {
-                        Image(systemName: "photo").foregroundColor(.gray)
+                        Image(systemName: "photo").foregroundColor(.appSecondaryText)
                     }
                     Spacer()
                     Button(action: { isEditMode ? submitEdit() : submitPost() }) {
@@ -196,10 +213,10 @@ struct WriteView: View {
                 }
                 .padding(.horizontal, 20)
                 .padding(.vertical, 14)
-                .background(Color.white)
+                .background(Color.appSecondaryBackground)
             }
         }
-        .background(Color.white)
+        .background(Color.appBackground)
         .alert("입력 확인", isPresented: $showAlert) {
             Button("확인", role: .cancel) {}
         } message: {
@@ -219,7 +236,7 @@ struct WriteView: View {
         }
     }
 
-    // MARK: - 선택 영역에 마크다운 적용
+    // MARK: - 마크다운 적용
     private func applyMarkdown(prefix: String, suffix: String) {
         guard let textView = textViewRef.textView else {
             content += "\(prefix)텍스트\(suffix)"
@@ -229,16 +246,13 @@ struct WriteView: View {
         let nsText = textView.text as NSString
 
         if selectedRange.length > 0 {
-            // 선택된 텍스트에 마크다운 적용
             let selected = nsText.substring(with: selectedRange)
             let replaced = "\(prefix)\(selected)\(suffix)"
             textView.replace(textView.selectedTextRange!, withText: replaced)
             content = textView.text
-            // 커서를 suffix 앞으로 이동
             let newLocation = selectedRange.location + prefix.count + selectedRange.length + suffix.count
             textView.selectedRange = NSRange(location: newLocation, length: 0)
         } else {
-            // 선택 없으면 커서 위치에 삽입 후 커서를 suffix 앞으로
             let placeholder = "텍스트"
             let insertion = "\(prefix)\(placeholder)\(suffix)"
             textView.replace(textView.selectedTextRange!, withText: insertion)

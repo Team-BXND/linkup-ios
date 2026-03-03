@@ -21,12 +21,10 @@ class PWViewModel: ObservableObject {
         do {
             let response = try await AuthService.shared.codesend(email: changeinfo)
             nav?.step = 3
-            print(response.data.message)
             
         } catch let error as ErrorType{
             message = ErrorMessage(error: error)
             showalert = true
-            print(error.localizedDescription)
         }
     }
     
@@ -34,11 +32,9 @@ class PWViewModel: ObservableObject {
         do {
             let response = try await AuthService.shared.codecheck(verifyInfo: changeinfo)
             nav?.step = 4
-            print(response.data.message)
         } catch let error as ErrorType{
             message = ErrorMessage(error: error)
             showalert = true
-            print(error.localizedDescription)
         }
     }
     
@@ -46,11 +42,9 @@ class PWViewModel: ObservableObject {
         do {
             let response = try await AuthService.shared.pwchange(changeInfo: changeinfo)
             goodalert = true
-            print(response.data.message)
         } catch let error as ErrorType {
             showalert = true
             message = ErrorMessage(error: error)
-            print(error.localizedDescription)
         }
     }
 }

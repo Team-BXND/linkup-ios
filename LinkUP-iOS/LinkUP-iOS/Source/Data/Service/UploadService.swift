@@ -27,7 +27,6 @@ class UploadService {
         components.queryItems = [URLQueryItem(name: "s3Key", value: s3Key)]
         guard let url = components.url else { throw ErrorType.unknown }
 
-        print("📦 [getPresignedURL] url: \(url)")
 
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
@@ -36,14 +35,7 @@ class UploadService {
 
         let (data, response) = try await URLSession.shared.data(for: request)
 
-        if let json = String(data: data, encoding: .utf8) {
-            print("📦 [getPresignedURL JSON]: \(json)")
-        }
-
         guard let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) else {
-            if let http = response as? HTTPURLResponse {
-                print("❌ [getPresignedURL] statusCode: \(http.statusCode)")
-            }
             throw ErrorType.unknown
         }
 

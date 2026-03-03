@@ -74,6 +74,7 @@ struct UserActivityView: View {
                 await VM.fetchUserActivity(type: activity, isRefresh: true)
             }
             .padding(.horizontal, 16)
+            .padding(.top, 12)
         }
     }
 }

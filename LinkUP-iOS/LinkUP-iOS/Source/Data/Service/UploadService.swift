@@ -35,12 +35,7 @@ class UploadService {
 
         let (data, response) = try await URLSession.shared.data(for: request)
 
-        if let json = String(data: data, encoding: .utf8) {
-        }
-
         guard let http = response as? HTTPURLResponse, (200...299).contains(http.statusCode) else {
-            if let http = response as? HTTPURLResponse {
-            }
             throw ErrorType.unknown
         }
 

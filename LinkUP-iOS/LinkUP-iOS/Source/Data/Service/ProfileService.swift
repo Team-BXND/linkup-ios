@@ -8,9 +8,13 @@
 import Moya
 import Foundation
 import Combine
+internal import Alamofire
 class ProfileService {
     static let shared = ProfileService()
-    private let provider = MoyaProvider<ProfileAPI>()
+    private let provider: MoyaProvider<ProfileAPI> = {
+        let session = Session(interceptor: AuthInterceptor.shared)
+        return MoyaProvider<ProfileAPI>(session: session)
+    }()
     
     private init() {}
     
@@ -36,4 +40,3 @@ class ProfileService {
         
     }
 }
-

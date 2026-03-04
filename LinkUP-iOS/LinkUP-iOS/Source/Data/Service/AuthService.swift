@@ -7,11 +7,15 @@
 
 import Foundation
 import Moya
+internal import Alamofire
 
 class AuthService {
-    var provider = MoyaProvider<AuthAPI>()
+    var provider : MoyaProvider<AuthAPI> = {
+        let session = Session(interceptor: AuthInterceptor.shared)
+        return MoyaProvider<AuthAPI>(session: session)
+    }()
     
-    static var shared = AuthService()
+    static let shared = AuthService()
     
     private init() {}
     

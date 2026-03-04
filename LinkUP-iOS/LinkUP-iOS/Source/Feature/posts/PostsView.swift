@@ -9,9 +9,11 @@ struct PostsView: View {
     @StateObject private var popularViewModel = PopularViewModel()
     @State private var selectedCategory: Category?
     @State private var showWriteView = false
+    @State private var showalert = false
+    @State private var movetoauth = false
 
     var body: some View {
-        NavigationView {
+        NavigationStack {
             ZStack(alignment: .bottomTrailing) {
                 Color.appBackground.ignoresSafeArea()
 
@@ -189,7 +191,13 @@ struct PostsView: View {
                     .padding(.top)
                 }
 
-                Button(action: { showWriteView = true }) {
+                Button(action: {
+                    if AuthManager.shared.isLogin {
+                        showWriteView = true
+                    } else {
+                        showalert = true
+                    }
+                }) {
                     Image(systemName: "plus")
                         .font(.system(size: 24, weight: .medium))
                         .foregroundColor(.white)
@@ -209,6 +217,20 @@ struct PostsView: View {
         .onAppear {
             popularViewModel.fetchPopular()
             viewModel.fetchPosts(page: 1)
+        }
+        .alert("알림", isPresented: $showalert) {
+            Button("확인", role: .cancel) {
+                
+            }
+            Button("로그인 이동") {
+                movetoauth = true
+            }
+        } message: {
+            // 1순위: 정의된 에러 타입 메시지
+            Text("로그인이 필요한 기능입니다.")
+        }
+        .navigationDestination(isPresented: $movetoauth) {
+            AuthView()
         }
     }
 

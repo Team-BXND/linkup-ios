@@ -4,10 +4,14 @@
 //
 import Foundation
 import Moya
+internal import Alamofire
 
 class PostService {
     static let shared = PostService()
-    private let provider = MoyaProvider<PostAPI>()
+    private let provider: MoyaProvider<PostAPI> = {
+        let session = Session(interceptor: AuthInterceptor.shared)
+        return MoyaProvider<PostAPI>(session: session)
+    }()
     private init() {}
 
     func fetchPosts(category: Category? = nil, page: Int = 1) async throws -> PostsResponse {

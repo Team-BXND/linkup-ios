@@ -8,14 +8,30 @@ struct AuthTextField: View {
     let placeholder: String
     @Binding var bindingText: String
     var isSecure = false
+    @State private var ishidden = true
 
     var body: some View {
         RoundedRectangle(cornerRadius: 14)
             .overlay {
                 if isSecure {
-                    SecureField(placeholder, text: $bindingText)
-                        .foregroundStyle(Color.appPrimaryText)
-                        .padding(.horizontal, 16)
+                    HStack {
+                        if ishidden {
+                            SecureField(placeholder, text: $bindingText, prompt: Text(placeholder).font(.semibold(16)).foregroundColor(.appPlaceholder))
+                                .foregroundStyle(Color.appPrimaryText)
+                                .padding(.horizontal, 16)
+                        } else {
+                            TextField("", text: $bindingText, prompt: Text(placeholder).font(.semibold(16)).foregroundColor(.appPlaceholder))
+                                .textInputAutocapitalization(.never)
+                                .foregroundStyle(Color.appPrimaryText)
+                                .padding(.horizontal, 16)
+                        }
+                        Button {
+                            ishidden.toggle()
+                        } label: {
+                            Image(systemName: ishidden ? "eye" : "eye.slash")
+                                .foregroundColor(.black)
+                        }
+                    }
                 } else {
                     TextField("", text: $bindingText, prompt: Text(placeholder).font(.semibold(16)).foregroundColor(.appPlaceholder))
                         .textInputAutocapitalization(.never)

@@ -29,22 +29,24 @@ struct RankingView: View {
                 .shadow(color: Color.black.opacity(0.06), radius: 1, x: 2, y: 0)
                 .shadow(color: Color.black.opacity(0.06), radius: 1, x: -2, y: 0)
                 .shadow(color: Color.black.opacity(0.06), radius: 1, x: 0, y: 4)
-
-                VStack(alignment: .leading, spacing: 24) {
-                    ForEach(0..<viewModel.rowRankings.count, id: \.self) { index in
-                        let user = viewModel.rowRankings[index]
-                        RankingRowView(user: user, rankIndex: index + 4)
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                
+                if viewModel.rankings.data.count > 3 {
+                    VStack(alignment: .leading, spacing: 24) {
+                        ForEach(0..<viewModel.rowRankings.count, id: \.self) { index in
+                            let user = viewModel.rowRankings[index]
+                            RankingRowView(user: user, rankIndex: index + 4)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+                        }
                     }
+                    .padding(.vertical, 16)
+                    .padding(.horizontal, 16)
+                    .frame(maxWidth: .infinity)
+                    .background(Color.appSecondaryBackground)
+                    .cornerRadius(20)
+                    .shadow(color: Color.black.opacity(0.06), radius: 1, x: 2, y: 0)
+                    .shadow(color: Color.black.opacity(0.06), radius: 1, x: -2, y: 0)
+                    .shadow(color: Color.black.opacity(0.06), radius: 1, x: 0, y: 4)
                 }
-                .padding(.vertical, 16)
-                .padding(.horizontal, 16)
-                .frame(maxWidth: .infinity)
-                .background(Color.appSecondaryBackground)
-                .cornerRadius(20)
-                .shadow(color: Color.black.opacity(0.06), radius: 1, x: 2, y: 0)
-                .shadow(color: Color.black.opacity(0.06), radius: 1, x: -2, y: 0)
-                .shadow(color: Color.black.opacity(0.06), radius: 1, x: 0, y: 4)
             }
             .padding(.horizontal, 32)
             .padding(.top, 24)

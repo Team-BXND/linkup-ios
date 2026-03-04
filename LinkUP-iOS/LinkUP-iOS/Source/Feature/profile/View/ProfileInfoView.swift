@@ -33,7 +33,7 @@ struct ProfileInfoView: View {
                             HStack {
                                 Spacer()
                                 Button {
-                                    // 로그아웃 액션
+                                    VM.logout()
                                 } label: {
                                     ZStack {
                                         RoundedRectangle(cornerRadius: 10)

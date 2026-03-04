@@ -4,10 +4,14 @@
 //
 import Foundation
 import Moya
+internal import Alamofire
 
 class UploadService {
     static let shared = UploadService()
-    private let provider = MoyaProvider<UploadAPI>()
+    private let provider: MoyaProvider<UploadAPI> = {
+        let session = Session(interceptor: AuthInterceptor.shared)
+        return MoyaProvider<UploadAPI>(session: session)
+    }()
     private init() {}
 
     // 이미지 업로드 → s3Key 반환
